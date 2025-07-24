@@ -34,7 +34,7 @@ temp/
 *.vcxproj
 
 # Файлы и папки, относящиеся к игровым движкам (Unity/Godot/Unreal)
-Library/
+# Library/  # Закомментировано - Unity нужен этот каталог
 Temp/
 Build/
 Builds/
