@@ -84,8 +84,9 @@ public class EnemyAttack : MonoBehaviour
         attackColliderObj.transform.localPosition = Vector3.zero;
         
         // Добавляем коллайдер атаки
-        attackCollider = attackColliderObj.AddComponent<CircleCollider2D>();
-        attackCollider.radius = attackRange;
+        CircleCollider2D circleCollider = attackColliderObj.AddComponent<CircleCollider2D>();
+        circleCollider.radius = attackRange;
+        attackCollider = circleCollider;
         attackCollider.isTrigger = true;
         
         // Скрываем коллайдер атаки (он будет активироваться только во время атаки)
@@ -302,9 +303,9 @@ public class EnemyAttack : MonoBehaviour
     {
         attackRange = newRange;
         
-        if (attackCollider != null)
+        if (attackCollider != null && attackCollider is CircleCollider2D circleCollider)
         {
-            attackCollider.radius = newRange;
+            circleCollider.radius = newRange;
         }
         
         if (enableDebugLogs)

@@ -28,7 +28,7 @@ public class EnemyAI : MonoBehaviour
     private EnemyAttack enemyAttack;
     
     // Состояние ИИ
-    private enum AIState { Patrol, Chase, Attack, Return }
+    public enum AIState { Patrol, Chase, Attack, Return }
     private AIState currentState = AIState.Patrol;
     
     // Переменные движения
@@ -248,7 +248,7 @@ public class EnemyAI : MonoBehaviour
         // Проверяем, не мертв ли враг
         if (healthSystem != null && healthSystem.IsDead())
         {
-            rb2D.velocity = Vector2.zero;
+            rb2D.linearVelocity = Vector2.zero;
             return;
         }
         
@@ -257,7 +257,7 @@ public class EnemyAI : MonoBehaviour
         
         // Применяем движение
         Vector2 velocity = direction * moveSpeed;
-        rb2D.velocity = velocity;
+        rb2D.linearVelocity = velocity;
         
         // Поворачиваем спрайт в направлении движения
         if (velocity.magnitude > 0.1f)
@@ -293,7 +293,7 @@ public class EnemyAI : MonoBehaviour
                 // Останавливаем движение при возврате
                 if (rb2D != null)
                 {
-                    rb2D.velocity = Vector2.zero;
+                    rb2D.linearVelocity = Vector2.zero;
                 }
                 break;
         }
