@@ -143,7 +143,7 @@ namespace OverlordRiseAndSlice
                 // Генерируем новый уровень
                 if (levelGenerator != null)
                 {
-                    levelGenerator.GenerateLevel();
+                    levelGenerator.GenerateRoom();
                 }
             }
         }

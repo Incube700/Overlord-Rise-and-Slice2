@@ -7,16 +7,26 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float attackRange = 1.5f;
     [SerializeField] private float attackCooldown = 1f;
+    
+    [Header("Debug")]
+    [SerializeField] private bool enableDebugLogs = true;
+    [SerializeField] private bool showGizmos = true;
 
     private Transform playerTransform;
     private Rigidbody2D rb2D;
     private EnemyHealth enemyHealth;
+    private Animator animator;
     private float lastAttackTime;
+    
+    // Состояние для анимации
+    private bool isMoving = false;
+    private bool isAttacking = false;
 
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         enemyHealth = GetComponent<EnemyHealth>();
+        animator = GetComponent<Animator>();
         
         // Ищем игрока по тегу
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -26,7 +36,12 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Player not found! Make sure player has 'Player' tag.");
+            Debug.LogWarning("EnemyAI: Player not found! Make sure player has 'Player' tag.");
+        }
+        
+        if (animator == null && enableDebugLogs)
+        {
+            Debug.LogWarning("EnemyAI: Animator not found. Animations will not work.");
         }
     }
 
@@ -34,6 +49,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (playerTransform == null || enemyHealth.IsDead())
         {
+            SetMoving(false);
             return;
         }
 
@@ -45,7 +61,9 @@ public class EnemyAI : MonoBehaviour
             // Если в зоне атаки
             if (distanceToPlayer <= attackRange)
             {
-                // TODO: Реализовать атаку
+                SetMoving(false);
+                
+                // Атакуем игрока
                 if (Time.time >= lastAttackTime + attackCooldown)
                 {
                     AttackPlayer();
@@ -55,8 +73,14 @@ public class EnemyAI : MonoBehaviour
             else
             {
                 // Двигаемся к игроку
+                SetMoving(true);
                 MoveTowardsPlayer();
             }
+        }
+        else
+        {
+            // Игрок вне зоны обнаружения
+            SetMoving(false);
         }
     }
 
@@ -71,15 +95,33 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// Атака игрока (заглушка)
+    /// Атака игрока
     /// </summary>
     private void AttackPlayer()
     {
-        Debug.Log("Enemy attacks player!");
-        // TODO: Реализовать логику атаки
-        // - Нанести урон игроку
-        // - Воспроизвести анимацию атаки
-        // - Добавить звуковые эффекты
+        SetAttacking(true);
+        
+        if (enableDebugLogs)
+        {
+            Debug.Log("EnemyAI: Enemy attacks player!");
+        }
+        
+        // TODO: Реализовать логику нанесения урона игроку
+        // Здесь можно добавить:
+        // - PlayerHealth.TakeDamage()
+        // - Звуковые эффекты
+        // - Эффекты частиц
+        
+        // Сбрасываем состояние атаки через короткое время
+        Invoke(nameof(EndAttack), 0.5f);
+    }
+    
+    /// <summary>
+    /// Завершает анимацию атаки
+    /// </summary>
+    private void EndAttack()
+    {
+        SetAttacking(false);
     }
 
     /// <summary>
@@ -111,10 +153,57 @@ public class EnemyAI : MonoBehaviour
         if (playerTransform == null) return false;
         return GetDistanceToPlayer() <= attackRange;
     }
+    
+    /// <summary>
+    /// Устанавливает состояние движения для анимации
+    /// </summary>
+    private void SetMoving(bool moving)
+    {
+        if (isMoving == moving) return;
+        
+        isMoving = moving;
+        
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", isMoving);
+        }
+        
+        if (enableDebugLogs)
+        {
+            Debug.Log($"EnemyAI: Enemy {(isMoving ? "started" : "stopped")} moving");
+        }
+    }
+    
+    /// <summary>
+    /// Устанавливает состояние атаки для анимации
+    /// </summary>
+    private void SetAttacking(bool attacking)
+    {
+        if (isAttacking == attacking) return;
+        
+        isAttacking = attacking;
+        
+        if (animator != null)
+        {
+            animator.SetBool("isAttacking", isAttacking);
+            
+            if (attacking)
+            {
+                animator.SetTrigger("Attack");
+            }
+        }
+        
+        if (enableDebugLogs)
+        {
+            Debug.Log($"EnemyAI: Enemy {(isAttacking ? "started" : "stopped")} attacking");
+        }
+    }
 
     // Гизмо для отладки в редакторе
     private void OnDrawGizmosSelected()
     {
+        if (!showGizmos) return;
+        
         // Зона обнаружения
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);

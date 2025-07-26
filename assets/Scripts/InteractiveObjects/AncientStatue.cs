@@ -29,6 +29,9 @@ namespace OverlordRiseAndSlice
         private Animator animator;
         private bool isActivated = false;
         private Color originalColor;
+        
+        [Header("Отладка")]
+        [SerializeField] private bool enableDebugLogs = true;
 
         protected override void Start()
         {
@@ -305,7 +308,7 @@ namespace OverlordRiseAndSlice
         /// </summary>
         IEnumerator PulseGlow()
         {
-            while (isPlayerNearby && !isActivated)
+                         while (playerInRange && !isActivated)
             {
                 float pulse = Mathf.Sin(Time.time * 2f) * 0.3f + 0.7f;
                 spriteRenderer.color = Color.Lerp(originalColor, glowColor, pulse * 0.5f);
