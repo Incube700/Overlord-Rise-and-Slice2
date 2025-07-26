@@ -344,7 +344,6 @@ GameObject:
   - component: {fileID: 561139395}
   - component: {fileID: 561139394}
   - component: {fileID: 561139393}
-  - component: {fileID: 561139392}
   - component: {fileID: 561139391}
   - component: {fileID: 561139398}
   m_Layer: 0
@@ -385,26 +384,6 @@ MonoBehaviour:
   onHealed:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &561139392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561139390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9ff5c934f013404ab602b35a7a3b6e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackDamage: 25
-  attackRange: 1.5
-  attackCooldown: 0.5
-  attackDuration: 0.3
-  attackEffect: {fileID: 0}
-  attackColor: {r: 1, g: 0, b: 0, a: 1}
-  enableDebugLogs: 1
-  showAttackRange: 1
 --- !u!114 &561139393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -580,7 +559,9 @@ MonoBehaviour:
   attackOffset: {x: 1, y: 0}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
+  attackColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.1
 --- !u!1 &846413974
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,7 +960,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 208637675, guid: e31ee015105da48458a9511ca024b069, type: 3}
+  m_Sprite: {fileID: -405886822, guid: 9c1924dba223b40199e3d752185faea7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
