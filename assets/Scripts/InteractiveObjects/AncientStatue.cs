@@ -1,91 +1,72 @@
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using System.Collections;
 
 namespace OverlordRiseAndSlice
 {
     /// <summary>
-    /// Древняя статуя - интерактивный объект, рассказывающий историю уровня
-    /// Даёт разные награды и лор в зависимости от яруса подземелья
+    /// Древняя статуя - интерактивный объект, который восстанавливает силы игрока
+    /// и предоставляет временные бонусы. Лор и эффекты зависят от яруса подземелья.
     /// </summary>
     public class AncientStatue : BaseInteractiveObject
     {
         [Header("Настройки статуи")]
-        public StatueType statueType = StatueType.OverlordMemory;
-        public bool glowsWhenNear = true;
-        public float glowIntensity = 2f;
-        public Color glowColor = Color.blue;
-        
+        [SerializeField] private StatueType statueType = StatueType.OverlordMemory;
+        [SerializeField] private bool glowsWhenNear = true;
+        [SerializeField] private float glowIntensity = 2f;
+        [SerializeField] private Color glowColor = Color.blue;
+
         [Header("Эффекты восстановления силы")]
-        public bool restoresPlayerPower = true;
-        public int healthRestoreAmount = 10;
-        public float powerBoostDuration = 30f;
-        public float powerBoostMultiplier = 1.2f;
-        
+        [SerializeField] private int healthRestoreAmount = 10;
+        [SerializeField] private float powerBoostDuration = 30f;
+        [SerializeField] private float powerBoostMultiplier = 1.2f;
+
         [Header("Анимация")]
-        public float activationAnimationDuration = 2f;
-        public AnimationCurve activationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        
+        [SerializeField] private float activationAnimationDuration = 2f;
+        [SerializeField] private AnimationCurve activationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
         // Компоненты для эффектов
-        private Light2D statueLight;
+        private SpriteRenderer spriteRenderer;
         private Animator animator;
         private bool isActivated = false;
-        
+        private Color originalColor;
+
         protected override void Start()
         {
             base.Start();
             SetupStatueSpecifics();
             SetupTierBasedLore();
         }
-        
+
         /// <summary>
         /// Настройка специфичных для статуи компонентов
         /// </summary>
         void SetupStatueSpecifics()
         {
-            // Настраиваем освещение
-            statueLight = GetComponentInChildren<Light2D>();
-            if (statueLight == null && glowsWhenNear)
+            // Настраиваем спрайт для эффектов
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
             {
-                CreateStatueLight();
+                originalColor = spriteRenderer.color;
+                if (glowsWhenNear)
+                {
+                    spriteRenderer.color = Color.Lerp(originalColor, glowColor, 0.3f);
+                }
             }
-            
-            if (statueLight != null)
-            {
-                statueLight.color = glowColor;
-                statueLight.intensity = 0f; // Начинаем с выключенного света
-            }
-            
+
             // Получаем аниматор
             animator = GetComponent<Animator>();
         }
-        
-        /// <summary>
-        /// Создаёт источник света для статуи
-        /// </summary>
-        void CreateStatueLight()
-        {
-            GameObject lightObject = new GameObject("StatueLight");
-            lightObject.transform.SetParent(transform);
-            lightObject.transform.localPosition = Vector3.zero;
-            
-            statueLight = lightObject.AddComponent<Light2D>();
-            statueLight.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
-            statueLight.color = glowColor;
-            statueLight.intensity = 0f;
-            statueLight.pointLightOuterRadius = 3f;
-        }
-        
+
         /// <summary>
         /// Настраивает лор в зависимости от текущего яруса
         /// </summary>
         void SetupTierBasedLore()
         {
             if (dungeonHierarchy == null) return;
-            
+
             var currentTier = dungeonHierarchy.CurrentTier;
             if (currentTier == null) return;
-            
+
             // Устанавливаем лор в зависимости от яруса
             switch (dungeonHierarchy.CurrentLevel)
             {
@@ -106,7 +87,7 @@ namespace OverlordRiseAndSlice
                     break;
             }
         }
-        
+
         /// <summary>
         /// Лор для самых нижних уровней (90-100)
         /// </summary>
@@ -116,232 +97,252 @@ namespace OverlordRiseAndSlice
             loreDescription = "Когда-то это была величественная статуя Overlord, но теперь от неё остались лишь обломки. " +
                             "Крысы свили гнёзда в трещинах мрамора, а плесень покрывает то, что когда-то было лицом власти. " +
                             "Но даже в таком состоянии она излучает слабый отблеск былого могущества...";
-            
+
             glowColor = Color.gray;
             healthRestoreAmount = 5;
         }
-        
+
         /// <summary>
         /// Лор для низких уровней (70-89)
         /// </summary>
         void SetupLowTierLore()
         {
-            objectName = "Осквернённая статуя";
-            loreDescription = "Мародёры исписали статуя граффити и украли все ценные детали, но основа всё ещё стоит. " +
-                            "На постаменте видны следы крови — здесь явно делили добычу. " +
-                            "Тем не менее, древняя магия всё ещё течёт через камень...";
-            
-            glowColor = Color.red;
+            objectName = "Потрёпанная статуя";
+            loreDescription = "Статуя павшего героя, некогда пытавшегося свергнуть Overlord. " +
+                            "Его лицо искажено болью и отчаянием, а доспехи покрыты ржавчиной. " +
+                            "Местные жители приносят к ней скромные дары, надеясь на защиту...";
+
+            glowColor = Color.yellow;
             healthRestoreAmount = 8;
         }
-        
+
         /// <summary>
         /// Лор для средних уровней (40-69)
         /// </summary>
         void SetupMidTierLore()
         {
-            objectName = "Статуя наёмника";
-            loreDescription = "Профессиональные наёмники превратили эту статую в своеобразный алтарь удачи. " +
-                            "Они оставляют здесь монеты и оружие, прося благословения перед боем. " +
-                            "Странно, но статуя словно отвечает на их просьбы...";
-            
-            glowColor = Color.blue;
+            objectName = "Статуя древнего стража";
+            loreDescription = "Могучий страж, созданный самим Overlord для защиты своих владений. " +
+                            "Его каменные глаза следят за каждым движением, а аура власти всё ещё пульсирует вокруг него. " +
+                            "Только достойные могут получить его благословение...";
+
+            glowColor = Color.cyan;
             healthRestoreAmount = 12;
         }
-        
+
         /// <summary>
         /// Лор для высоких уровней (20-39)
         /// </summary>
         void SetupHighTierLore()
         {
-            objectName = "Статуя павшего героя";
-            loreDescription = "Лорды войны установили здесь статую одного из героев, убивших Overlord. " +
-                            "Но что-то не так... лицо героя искажено болью, а его поза больше напоминает мольбу о пощаде. " +
-                            "Возможно, победа была не такой безоговорочной, как они думали...";
-            
-            glowColor = Color.yellow;
+            objectName = "Статуя узурпатора";
+            loreDescription = "Памятник тому, кто осмелился бросить вызов самому Overlord. " +
+                            "Его поза выражает непокорность, а меч всё ещё занесён для удара. " +
+                            "Аура бунта и неповиновения исходит от этого монумента...";
+
+            glowColor = Color.magenta;
             healthRestoreAmount = 15;
         }
-        
+
         /// <summary>
-        /// Лор для верхних уровней (1-19)
+        /// Лор для самых верхних уровней (1-19)
         /// </summary>
         void SetupTopTierLore()
         {
-            objectName = "Трон-статуя узурпатора";
-            loreDescription = "На вершине замка узурпаторы установили золотую статую своего лидера на троне Overlord. " +
-                            "Но золото потускнело, а лицо статуи начинает напоминать... самого Overlord. " +
-                            "Кажется, даже их победные символы не могут избежать его влияния...";
-            
-            glowColor = Color.white;
+            objectName = "Величественная статуя Overlord";
+            loreDescription = "Сам Overlord, запечатлённый в камне в момент своего триумфа. " +
+                            "Его взгляд пронзает время и пространство, а аура абсолютной власти окутывает всё вокруг. " +
+                            "Только истинный наследник может прикоснуться к этой статуе...";
+
+            glowColor = Color.red;
             healthRestoreAmount = 20;
         }
-        
+
         /// <summary>
-        /// Основная логика взаимодействия со статуей
+        /// Выполняет взаимодействие со статуей
         /// </summary>
         protected override void ExecuteInteraction()
         {
             if (isActivated) return;
-            
+
+            isActivated = true;
             StartCoroutine(ActivateStatue());
         }
-        
+
         /// <summary>
-        /// Анимация активации статуи
+        /// Корутина активации статуи
         /// </summary>
         IEnumerator ActivateStatue()
         {
-            isActivated = true;
-            
+            if (enableDebugLogs)
+            {
+                Debug.Log($"AncientStatue: Активация статуи {objectName}");
+            }
+
             // Запускаем анимацию активации
             if (animator != null)
             {
                 animator.SetTrigger("Activate");
             }
-            
-            // Плавно включаем свет
-            float elapsedTime = 0f;
-            while (elapsedTime < activationAnimationDuration)
+
+            // Эффект свечения
+            if (spriteRenderer != null)
             {
-                elapsedTime += Time.deltaTime;
-                float progress = elapsedTime / activationAnimationDuration;
-                float curveValue = activationCurve.Evaluate(progress);
-                
-                if (statueLight != null)
+                float elapsedTime = 0f;
+                while (elapsedTime < activationAnimationDuration)
                 {
-                    statueLight.intensity = curveValue * glowIntensity;
+                    float progress = elapsedTime / activationAnimationDuration;
+                    float curveValue = activationCurve.Evaluate(progress);
+
+                    spriteRenderer.color = Color.Lerp(originalColor, glowColor, curveValue);
+                    spriteRenderer.transform.localScale = Vector3.one * (1f + curveValue * 0.2f);
+
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
                 }
-                
-                yield return null;
+
+                // Возвращаем к нормальному состоянию
+                spriteRenderer.color = originalColor;
+                spriteRenderer.transform.localScale = Vector3.one;
             }
-            
+
             // Даём награды
             GiveStatueRewards();
-            
-            // Если это одноразовая статуя, отключаем возможность повторного взаимодействия
-            if (!canInteractMultipleTimes)
+
+            // Сбрасываем состояние
+            isActivated = false;
+
+            if (enableDebugLogs)
             {
-                canInteractMultipleTimes = false;
+                Debug.Log("AncientStatue: Активация завершена");
             }
         }
-        
+
         /// <summary>
         /// Даёт награды от статуи
         /// </summary>
         void GiveStatueRewards()
         {
-            // Восстанавливаем здоровье игрока
+            // Восстанавливаем здоровье
             RestorePlayerHealth();
-            
-            // Даём временный бафф силы
-            if (restoresPlayerPower)
-            {
-                GivePowerBoost();
-            }
-            
-            // Даём награды в зависимости от яруса
+
+            // Даём временный бонус силы
+            GivePowerBoost();
+
+            // Даём награду в зависимости от яруса
             GiveTierBasedReward();
-            
-            Debug.Log($"[{objectName}] Статуя активирована! Здоровье восстановлено на {healthRestoreAmount}");
+
+            if (enableDebugLogs)
+            {
+                Debug.Log($"AncientStatue: Выданы награды от статуи {objectName}");
+            }
         }
-        
+
         /// <summary>
         /// Восстанавливает здоровье игрока
         /// </summary>
         void RestorePlayerHealth()
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player == null) return;
-            
-            // TODO: Интеграция с системой здоровья игрока
-            Debug.Log($"[{objectName}] Игрок восстановил {healthRestoreAmount} здоровья");
+            // Здесь можно добавить логику восстановления здоровья игрока
+            // Например, найти PlayerHealth компонент и вызвать RestoreHealth
+
+            if (enableDebugLogs)
+            {
+                Debug.Log($"AncientStatue: Восстановлено {healthRestoreAmount} здоровья");
+            }
         }
-        
+
         /// <summary>
-        /// Даёт временный бафф силы
+        /// Даёт временный бонус силы
         /// </summary>
         void GivePowerBoost()
         {
+            // Здесь можно добавить логику временного бонуса
+            // Например, найти PlayerMovement и увеличить скорость
+
+            if (enableDebugLogs)
+            {
+                Debug.Log($"AncientStatue: Дан бонус силы на {powerBoostDuration} секунд");
+            }
+
             StartCoroutine(PowerBoostCoroutine());
         }
-        
+
         /// <summary>
-        /// Корутина для временного баффа силы
+        /// Корутина временного бонуса силы
         /// </summary>
         IEnumerator PowerBoostCoroutine()
         {
-            Debug.Log($"[{objectName}] Получен бафф силы на {powerBoostDuration} секунд (x{powerBoostMultiplier})");
-            
-            // TODO: Интеграция с системой баффов игрока
-            
+            // Здесь можно добавить логику временного бонуса
+            // Например, увеличить скорость движения игрока
+
             yield return new WaitForSeconds(powerBoostDuration);
-            
-            Debug.Log($"[{objectName}] Бафф силы закончился");
+
+            if (enableDebugLogs)
+            {
+                Debug.Log("AncientStatue: Бонус силы закончился");
+            }
         }
-        
+
         /// <summary>
-        /// Показывает эффект свечения при входе игрока в зону
+        /// Показывает подсказку для взаимодействия
         /// </summary>
         protected override void ShowInteractionPrompt()
         {
+            if (isActivated) return;
+
             base.ShowInteractionPrompt();
-            
-            if (glowsWhenNear && statueLight != null && !isActivated)
+
+            // Добавляем эффект пульсации при приближении
+            if (glowsWhenNear && spriteRenderer != null)
             {
                 StartCoroutine(PulseGlow());
             }
         }
-        
+
         /// <summary>
-        /// Эффект пульсирующего свечения
+        /// Корутина пульсации свечения
         /// </summary>
         IEnumerator PulseGlow()
         {
-            while (playerInRange && !isActivated)
+            while (isPlayerNearby && !isActivated)
             {
-                // Пульсация от 0.5 до 1.0 интенсивности
-                float time = Time.time * 2f;
-                float intensity = 0.5f + 0.5f * Mathf.Sin(time);
-                
-                if (statueLight != null)
-                {
-                    statueLight.intensity = intensity;
-                }
-                
+                float pulse = Mathf.Sin(Time.time * 2f) * 0.3f + 0.7f;
+                spriteRenderer.color = Color.Lerp(originalColor, glowColor, pulse * 0.5f);
+
                 yield return null;
             }
-            
-            // Возвращаем к исходному состоянию
-            if (statueLight != null && !isActivated)
+
+            // Возвращаем к нормальному состоянию
+            if (spriteRenderer != null)
             {
-                statueLight.intensity = 0f;
+                spriteRenderer.color = originalColor;
             }
         }
-        
+
         /// <summary>
-        /// Получает специальное описание статуи с учётом её типа
+        /// Получает описание типа статуи
         /// </summary>
         public string GetStatueTypeDescription()
         {
             switch (statueType)
             {
                 case StatueType.OverlordMemory:
-                    return "Эта статуя хранит воспоминания о былом величии Overlord...";
+                    return "Воспоминание о великом Overlord";
                 case StatueType.FallenHero:
-                    return "Памятник герою, который думал, что победил зло...";
+                    return "Павший герой, пытавшийся свергнуть тирана";
                 case StatueType.AncientGuardian:
-                    return "Древний страж, всё ещё охраняющий секреты замка...";
+                    return "Древний страж, созданный Overlord";
                 case StatueType.Usurper:
-                    return "Символ новой власти, но власть эта оказалась иллюзией...";
+                    return "Узурпатор, бросивший вызов власти";
                 default:
-                    return loreDescription;
+                    return "Неизвестная статуя";
             }
         }
     }
-    
+
     /// <summary>
-    /// Типы статуй в подземелье
+    /// Типы статуй
     /// </summary>
     public enum StatueType
     {
