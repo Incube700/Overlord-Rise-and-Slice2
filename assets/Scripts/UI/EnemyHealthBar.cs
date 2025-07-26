@@ -1,19 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
-/// Полоска здоровья врага, отображаемая над ним.
-/// Использует Canvas и Slider для визуализации текущего здоровья.
+/// Упрощённая полоска здоровья врага без зависимости от UnityEngine.UI.
+/// Использует SpriteRenderer для отображения здоровья над врагом.
 /// Автоматически привязывается к EnemyHealth и обновляется при изменениях.
 /// </summary>
 public class EnemyHealthBar : MonoBehaviour
 {
-    [Header("Настройки UI")]
-    [SerializeField] private Canvas healthBarCanvas; // Canvas для полоски здоровья
-    [SerializeField] private Slider healthSlider; // Слайдер здоровья
-    [SerializeField] private Image fillImage; // Изображение заполнения
-    [SerializeField] private Image backgroundImage; // Фоновое изображение
-    
     [Header("Настройки позиционирования")]
     [SerializeField] private Vector3 offset = new Vector3(0, 1.5f, 0); // Смещение от врага
     [SerializeField] private bool followTarget = true; // Следовать за целью
@@ -23,11 +16,13 @@ public class EnemyHealthBar : MonoBehaviour
     [SerializeField] private bool hideWhenFull = true; // Скрывать при полном здоровье
     [SerializeField] private bool hideWhenDead = true; // Скрывать при смерти
     [SerializeField] private float fadeSpeed = 2f; // Скорость появления/исчезновения
+    [SerializeField] private Vector2 barSize = new Vector2(1f, 0.1f); // Размер полоски
     
     [Header("Цвета здоровья")]
     [SerializeField] private Color fullHealthColor = Color.green; // Цвет при полном здоровье
     [SerializeField] private Color halfHealthColor = Color.yellow; // Цвет при половине здоровья
     [SerializeField] private Color lowHealthColor = Color.red; // Цвет при низком здоровье
+    [SerializeField] private Color backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f); // Цвет фона
     [SerializeField] private float lowHealthThreshold = 0.25f; // Порог низкого здоровья
     
     [Header("Отладка")]
@@ -37,15 +32,22 @@ public class EnemyHealthBar : MonoBehaviour
     private EnemyHealth enemyHealth;
     private Transform targetTransform;
     private Camera mainCamera;
-    private CanvasGroup canvasGroup;
+    
+    // Визуальные компоненты
+    private GameObject backgroundBar;
+    private GameObject healthBar;
+    private SpriteRenderer backgroundRenderer;
+    private SpriteRenderer healthRenderer;
     
     // Состояние анимации
     private float targetAlpha = 1f;
     private float currentAlpha = 1f;
+    private float currentHealthPercentage = 1f;
     
     void Start()
     {
         InitializeComponents();
+        CreateHealthBar();
         SetupHealthBar();
         SubscribeToEvents();
     }
@@ -55,6 +57,7 @@ public class EnemyHealthBar : MonoBehaviour
         UpdatePosition();
         UpdateRotation();
         UpdateVisibility();
+        UpdateHealthDisplay();
     }
     
     void OnDestroy()
@@ -86,19 +89,6 @@ public class EnemyHealthBar : MonoBehaviour
             mainCamera = FindObjectOfType<Camera>();
         }
         
-        // Создаём Canvas если его нет
-        if (healthBarCanvas == null)
-        {
-            CreateHealthBarCanvas();
-        }
-        
-        // Получаем CanvasGroup для анимации прозрачности
-        canvasGroup = healthBarCanvas.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-        {
-            canvasGroup = healthBarCanvas.gameObject.AddComponent<CanvasGroup>();
-        }
-        
         if (enableDebugLogs)
         {
             Debug.Log($"EnemyHealthBar: Компоненты инициализированы для {gameObject.name}");
@@ -106,113 +96,50 @@ public class EnemyHealthBar : MonoBehaviour
     }
     
     /// <summary>
-    /// Создаёт Canvas для полоски здоровья
+    /// Создаёт визуальную полоску здоровья
     /// </summary>
-    private void CreateHealthBarCanvas()
+    private void CreateHealthBar()
     {
-        // Создаём GameObject для Canvas
-        GameObject canvasObject = new GameObject("HealthBarCanvas");
-        canvasObject.transform.SetParent(transform);
-        canvasObject.transform.localPosition = Vector3.zero;
+        // Создаём фоновую полоску
+        backgroundBar = new GameObject("HealthBar_Background");
+        backgroundBar.transform.SetParent(transform);
+        backgroundBar.transform.localPosition = Vector3.zero;
+        backgroundBar.transform.localScale = new Vector3(barSize.x, barSize.y, 1f);
         
-        // Добавляем Canvas
-        healthBarCanvas = canvasObject.AddComponent<Canvas>();
-        healthBarCanvas.renderMode = RenderMode.WorldSpace;
-        healthBarCanvas.worldCamera = mainCamera;
-        healthBarCanvas.sortingOrder = 10; // Поверх других UI элементов
+        backgroundRenderer = backgroundBar.AddComponent<SpriteRenderer>();
+        backgroundRenderer.sprite = CreateBarSprite();
+        backgroundRenderer.color = backgroundColor;
+        backgroundRenderer.sortingOrder = 10;
         
-        // Настраиваем размер Canvas
-        RectTransform canvasRect = healthBarCanvas.GetComponent<RectTransform>();
-        canvasRect.sizeDelta = new Vector2(2f, 0.3f);
-        canvasRect.localScale = Vector3.one * 0.01f; // Масштабируем для мирового пространства
+        // Создаём полоску здоровья
+        healthBar = new GameObject("HealthBar_Fill");
+        healthBar.transform.SetParent(transform);
+        healthBar.transform.localPosition = Vector3.zero;
+        healthBar.transform.localScale = new Vector3(barSize.x, barSize.y, 1f);
         
-        // Создаём Slider
-        CreateHealthSlider(canvasObject);
+        healthRenderer = healthBar.AddComponent<SpriteRenderer>();
+        healthRenderer.sprite = CreateBarSprite();
+        healthRenderer.color = fullHealthColor;
+        healthRenderer.sortingOrder = 11;
         
         if (enableDebugLogs)
         {
-            Debug.Log("EnemyHealthBar: Canvas создан автоматически");
+            Debug.Log("EnemyHealthBar: Визуальная полоска здоровья создана");
         }
     }
     
     /// <summary>
-    /// Создаёт слайдер здоровья
+    /// Создаёт простой спрайт для полоски
     /// </summary>
-    private void CreateHealthSlider(GameObject parent)
+    private Sprite CreateBarSprite()
     {
-        // Создаём GameObject для слайдера
-        GameObject sliderObject = new GameObject("HealthSlider");
-        sliderObject.transform.SetParent(parent.transform);
+        // Создаём белую текстуру 1x1
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, Color.white);
+        texture.Apply();
         
-        // Настраиваем RectTransform
-        RectTransform sliderRect = sliderObject.AddComponent<RectTransform>();
-        sliderRect.anchorMin = Vector2.zero;
-        sliderRect.anchorMax = Vector2.one;
-        sliderRect.offsetMin = Vector2.zero;
-        sliderRect.offsetMax = Vector2.zero;
-        
-        // Добавляем Slider
-        healthSlider = sliderObject.AddComponent<Slider>();
-        healthSlider.minValue = 0f;
-        healthSlider.maxValue = 1f;
-        healthSlider.value = 1f;
-        
-        // Создаём фон
-        CreateSliderBackground(sliderObject);
-        
-        // Создаём заполнение
-        CreateSliderFill(sliderObject);
-    }
-    
-    /// <summary>
-    /// Создаёт фон слайдера
-    /// </summary>
-    private void CreateSliderBackground(GameObject sliderParent)
-    {
-        GameObject backgroundObject = new GameObject("Background");
-        backgroundObject.transform.SetParent(sliderParent.transform);
-        
-        RectTransform bgRect = backgroundObject.AddComponent<RectTransform>();
-        bgRect.anchorMin = Vector2.zero;
-        bgRect.anchorMax = Vector2.one;
-        bgRect.offsetMin = Vector2.zero;
-        bgRect.offsetMax = Vector2.zero;
-        
-        backgroundImage = backgroundObject.AddComponent<Image>();
-        backgroundImage.color = new Color(0.2f, 0.2f, 0.2f, 0.8f); // Тёмно-серый фон
-        
-        // Устанавливаем как фон слайдера
-        healthSlider.targetGraphic = backgroundImage;
-    }
-    
-    /// <summary>
-    /// Создаёт заполнение слайдера
-    /// </summary>
-    private void CreateSliderFill(GameObject sliderParent)
-    {
-        GameObject fillAreaObject = new GameObject("Fill Area");
-        fillAreaObject.transform.SetParent(sliderParent.transform);
-        
-        RectTransform fillAreaRect = fillAreaObject.AddComponent<RectTransform>();
-        fillAreaRect.anchorMin = Vector2.zero;
-        fillAreaRect.anchorMax = Vector2.one;
-        fillAreaRect.offsetMin = Vector2.zero;
-        fillAreaRect.offsetMax = Vector2.zero;
-        
-        GameObject fillObject = new GameObject("Fill");
-        fillObject.transform.SetParent(fillAreaObject.transform);
-        
-        RectTransform fillRect = fillObject.AddComponent<RectTransform>();
-        fillRect.anchorMin = Vector2.zero;
-        fillRect.anchorMax = Vector2.one;
-        fillRect.offsetMin = Vector2.zero;
-        fillRect.offsetMax = Vector2.zero;
-        
-        fillImage = fillObject.AddComponent<Image>();
-        fillImage.color = fullHealthColor;
-        
-        // Устанавливаем область заполнения
-        healthSlider.fillRect = fillRect;
+        // Создаём спрайт из текстуры
+        return Sprite.Create(texture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
     }
     
     /// <summary>
@@ -222,7 +149,8 @@ public class EnemyHealthBar : MonoBehaviour
     {
         if (enemyHealth != null)
         {
-            UpdateHealthDisplay(enemyHealth.GetCurrentHealth(), enemyHealth.GetMaxHealth());
+            currentHealthPercentage = enemyHealth.GetHealthPercentage();
+            UpdateHealthVisual();
         }
         
         // Устанавливаем начальную видимость
@@ -293,14 +221,63 @@ public class EnemyHealthBar : MonoBehaviour
     /// </summary>
     private void UpdateVisibility()
     {
-        if (canvasGroup == null) return;
-        
         // Плавно изменяем прозрачность
         if (Mathf.Abs(currentAlpha - targetAlpha) > 0.01f)
         {
             currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, fadeSpeed * Time.deltaTime);
-            canvasGroup.alpha = currentAlpha;
+            
+            if (backgroundRenderer != null)
+            {
+                Color bgColor = backgroundRenderer.color;
+                bgColor.a = currentAlpha * 0.8f;
+                backgroundRenderer.color = bgColor;
+            }
+            
+            if (healthRenderer != null)
+            {
+                Color healthColor = healthRenderer.color;
+                healthColor.a = currentAlpha;
+                healthRenderer.color = healthColor;
+            }
         }
+    }
+    
+    /// <summary>
+    /// Обновляет отображение здоровья
+    /// </summary>
+    private void UpdateHealthDisplay()
+    {
+        if (enemyHealth == null || healthBar == null) return;
+        
+        float targetHealthPercentage = enemyHealth.GetHealthPercentage();
+        
+        // Плавно обновляем процент здоровья
+        if (Mathf.Abs(currentHealthPercentage - targetHealthPercentage) > 0.01f)
+        {
+            currentHealthPercentage = Mathf.MoveTowards(currentHealthPercentage, targetHealthPercentage, 2f * Time.deltaTime);
+            UpdateHealthVisual();
+        }
+    }
+    
+    /// <summary>
+    /// Обновляет визуальное отображение здоровья
+    /// </summary>
+    private void UpdateHealthVisual()
+    {
+        if (healthBar == null || healthRenderer == null) return;
+        
+        // Обновляем масштаб полоски здоровья
+        Vector3 scale = healthBar.transform.localScale;
+        scale.x = barSize.x * currentHealthPercentage;
+        healthBar.transform.localScale = scale;
+        
+        // Сдвигаем полоску влево при уменьшении
+        Vector3 position = healthBar.transform.localPosition;
+        position.x = -barSize.x * (1f - currentHealthPercentage) * 0.5f;
+        healthBar.transform.localPosition = position;
+        
+        // Обновляем цвет в зависимости от процента здоровья
+        UpdateHealthColor(currentHealthPercentage);
     }
     
     /// <summary>
@@ -308,8 +285,6 @@ public class EnemyHealthBar : MonoBehaviour
     /// </summary>
     private void OnHealthChanged(int currentHealth, int maxHealth)
     {
-        UpdateHealthDisplay(currentHealth, maxHealth);
-        
         // Показываем полоску при получении урона
         if (hideWhenFull && currentHealth < maxHealth)
         {
@@ -343,25 +318,11 @@ public class EnemyHealthBar : MonoBehaviour
     }
     
     /// <summary>
-    /// Обновляет отображение здоровья
-    /// </summary>
-    private void UpdateHealthDisplay(int currentHealth, int maxHealth)
-    {
-        if (healthSlider == null) return;
-        
-        float healthPercentage = maxHealth > 0 ? (float)currentHealth / maxHealth : 0f;
-        healthSlider.value = healthPercentage;
-        
-        // Обновляем цвет в зависимости от процента здоровья
-        UpdateHealthColor(healthPercentage);
-    }
-    
-    /// <summary>
     /// Обновляет цвет полоски здоровья
     /// </summary>
     private void UpdateHealthColor(float healthPercentage)
     {
-        if (fillImage == null) return;
+        if (healthRenderer == null) return;
         
         Color targetColor;
         
@@ -383,7 +344,9 @@ public class EnemyHealthBar : MonoBehaviour
             targetColor = Color.Lerp(halfHealthColor, fullHealthColor, t);
         }
         
-        fillImage.color = targetColor;
+        // Сохраняем текущую прозрачность
+        targetColor.a = healthRenderer.color.a;
+        healthRenderer.color = targetColor;
     }
     
     #region Публичные методы
