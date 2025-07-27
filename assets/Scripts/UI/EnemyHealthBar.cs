@@ -1,11 +1,13 @@
 using UnityEngine;
 
-/// <summary>
-/// Упрощённая полоска здоровья врага без зависимости от UnityEngine.UI.
-/// Использует SpriteRenderer для отображения здоровья над врагом.
-/// Автоматически привязывается к EnemyHealth и обновляется при изменениях.
-/// </summary>
-public class EnemyHealthBar : MonoBehaviour
+namespace OverlordRiseAndSlice
+{
+    /// <summary>
+    /// Упрощённая полоска здоровья врага без зависимости от UnityEngine.UI.
+    /// Использует SpriteRenderer для отображения здоровья над врагом.
+    /// Автоматически привязывается к EnemyHealth и обновляется при изменениях.
+    /// </summary>
+    public class EnemyHealthBar : MonoBehaviour
 {
     [Header("Настройки позиционирования")]
     [SerializeField] private Vector3 offset = new Vector3(0, 1.5f, 0); // Смещение от врага
@@ -385,4 +387,5 @@ public class EnemyHealthBar : MonoBehaviour
     }
     
     #endregion
-} 
+}
+}

@@ -1,11 +1,13 @@
 using UnityEngine;
 
-/// <summary>
-/// Основной контроллер врага, управляющий всеми его компонентами.
-/// Координирует работу EnemyHealth, EnemyAI, EnemyHealthBar и анимаций.
-/// Обеспечивает правильную инициализацию и взаимодействие между системами.
-/// </summary>
-public class EnemyController : MonoBehaviour
+namespace OverlordRiseAndSlice
+{
+    /// <summary>
+    /// Основной контроллер врага, управляющий всеми его компонентами.
+    /// Координирует работу EnemyHealth, EnemyAI, EnemyHealthBar и анимаций.
+    /// Обеспечивает правильную инициализацию и взаимодействие между системами.
+    /// </summary>
+    public class EnemyController : MonoBehaviour
 {
     [Header("Настройки врага")]
     [SerializeField] private string enemyName = "Enemy"; // Имя врага
@@ -448,4 +450,5 @@ public class EnemyController : MonoBehaviour
     }
     
     #endregion
-} 
+}
+}

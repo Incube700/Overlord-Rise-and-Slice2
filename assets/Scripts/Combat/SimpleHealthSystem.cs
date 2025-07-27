@@ -41,12 +41,12 @@ namespace OverlordRiseAndSlice
         public System.Action<int> OnDamageTaken;
         public System.Action<int> OnHealed;
         
-        private void Awake()
+        protected virtual void Awake()
         {
             InitializeComponents();
         }
         
-        private void Start()
+        protected virtual void Start()
         {
             currentHealth = maxHealth;
             
