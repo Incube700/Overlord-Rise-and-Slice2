@@ -223,7 +223,7 @@ namespace OverlordRiseAndSlice
         
         if (enemyHealth == null)
         {
-            Debug.LogError($"EnemyController: {enemyName} не имеет компонента EnemyHealth!");
+            Debug.LogError($"EnemyController: {enemyName} не имеет компонента SimpleHealthSystem!");
             hasErrors = true;
         }
         
@@ -261,7 +261,7 @@ namespace OverlordRiseAndSlice
     private void LogComponentStatus()
     {
         Debug.Log($"=== Статус компонентов {enemyName} ===");
-        Debug.Log($"EnemyHealth: {(enemyHealth != null ? "✓" : "✗")}");
+        Debug.Log($"SimpleHealthSystem: {(enemyHealth != null ? "✓" : "✗")}");
         Debug.Log($"EnemyAI: {(enemyAI != null ? "✓" : "✗")}");
         Debug.Log($"EnemyHealthBar: {(healthBar != null ? "✓" : "✗")}");
         Debug.Log($"Animator: {(animator != null ? "✓" : "✗")}");
