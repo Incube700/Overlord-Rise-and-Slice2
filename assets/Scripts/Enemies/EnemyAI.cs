@@ -32,6 +32,22 @@ namespace OverlordRiseAndSlice
             enemyAttack = GetComponent<SimpleAttackSystem>();
             animator = GetComponent<Animator>();
             
+            // Проверяем наличие компонентов
+            if (rb2D == null && enableDebugLogs)
+            {
+                Debug.LogWarning("EnemyAI: Rigidbody2D not found on " + gameObject.name);
+            }
+            
+            if (enemyHealth == null && enableDebugLogs)
+            {
+                Debug.LogWarning("EnemyAI: SimpleHealthSystem not found on " + gameObject.name);
+            }
+            
+            if (enemyAttack == null && enableDebugLogs)
+            {
+                Debug.LogWarning("EnemyAI: SimpleAttackSystem not found on " + gameObject.name);
+            }
+            
             // Ищем игрока по тегу
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
@@ -51,7 +67,7 @@ namespace OverlordRiseAndSlice
 
         private void Update()
         {
-            if (playerTransform == null || enemyHealth.IsDead())
+            if (playerTransform == null || (enemyHealth != null && enemyHealth.IsDead()))
             {
                 SetMoving(false);
                 return;
@@ -92,6 +108,8 @@ namespace OverlordRiseAndSlice
         /// </summary>
         private void MoveTowardsPlayer()
         {
+            if (rb2D == null || playerTransform == null) return;
+            
             Vector2 direction = (playerTransform.position - transform.position).normalized;
             Vector2 newPosition = rb2D.position + direction * moveSpeed * Time.fixedDeltaTime;
             rb2D.MovePosition(newPosition);

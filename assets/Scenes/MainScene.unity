@@ -269,9 +269,6 @@ GameObject:
   - component: {fileID: 561139396}
   - component: {fileID: 561139395}
   - component: {fileID: 561139394}
-  - component: {fileID: 561139393}
-  - component: {fileID: 561139391}
-  - component: {fileID: 561139398}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -279,55 +276,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &561139391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561139390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aefd42946840454896be972b79a6a19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
-  damageEffect: {fileID: 0}
-  deathEffect: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  enableDebugLogs: 0
-  showHealthBar: 1
-  onDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  onHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  onDamageTaken:
-    m_PersistentCalls:
-      m_Calls: []
-  onHealed:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &561139393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561139390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 244fa163f34b2467fa22d44bd9ae5fad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  dashSpeed: 15
-  dashDuration: 0.2
-  dashCooldown: 1
-  dashMakesInvulnerable: 1
-  enableDebugLogs: 1
 --- !u!61 &561139394
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -471,30 +419,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &561139398
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561139390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95a0ff9c5c9a94d5e99cbb89a281cbfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackDamage: 25
-  attackRange: 1.2
-  attackCooldown: 0.4
-  attackDuration: 0.3
-  attackOffset: {x: 1, y: 0}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  attackColor: {r: 1, g: 0, b: 0, a: 1}
-  flashDuration: 0.1
-  enableDebugLogs: 1
-  showAttackGizmos: 1
 --- !u!1 &846413974
 GameObject:
   m_ObjectHideFlags: 0
@@ -747,10 +671,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1246146939}
   - component: {fileID: 1246146938}
-  - component: {fileID: 1246146937}
-  - component: {fileID: 1246146936}
-  - component: {fileID: 1246146935}
-  - component: {fileID: 1246146934}
   - component: {fileID: 1246146933}
   m_Layer: 0
   m_Name: Enemy
@@ -786,91 +706,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1246146934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1246146932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78f7429c41a824f5da07b287ade76312, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: 0, y: 1.5, z: 0}
-  followTarget: 1
-  faceCamera: 1
-  hideWhenFull: 1
-  hideWhenDead: 1
-  fadeSpeed: 2
-  barSize: {x: 1, y: 0.1}
-  fullHealthColor: {r: 0, g: 1, b: 0, a: 1}
-  halfHealthColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  lowHealthColor: {r: 1, g: 0, b: 0, a: 1}
-  backgroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.8}
-  lowHealthThreshold: 0.25
-  enableDebugLogs: 0
---- !u!114 &1246146935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1246146932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 774c184d5e99d45cd84190ed71ef23de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 100
-  invulnerabilityDuration: 0.2
-  isInvulnerable: 0
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
-  damageFlashDuration: 0.1
-  damageFlashCount: 3
-  deathDelay: 2
-  disableColliderOnDeath: 1
-  enableDebugLogs: 1
---- !u!114 &1246146936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1246146932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95531bd5659d24d3280aa14f90550c74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 3
-  detectionRange: 10
-  attackRange: 1.5
-  attackCooldown: 1
-  enableDebugLogs: 1
-  showGizmos: 1
---- !u!114 &1246146937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1246146932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06de25962a5544004893562a429e51a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackDamage: 15
-  attackRange: 1.2
-  attackDuration: 0.4
-  attackCooldown: 1.5
-  attackEffect: {fileID: 0}
-  attackColor: {r: 1, g: 0, b: 0, a: 1}
-  enableDebugLogs: 1
-  showAttackRange: 1
 --- !u!212 &1246146938
 SpriteRenderer:
   m_ObjectHideFlags: 0
