@@ -117,7 +117,7 @@ public class PlayerMeleeAttack : MonoBehaviour
         if (Time.time < lastAttackTime + attackCooldown) return false;
 
         // Не можем атаковать во время dash (если есть PlayerMovement)
-        if (playerMovement != null && playerMovement.IsDashing()) return false;
+        
 
         return true;
     }

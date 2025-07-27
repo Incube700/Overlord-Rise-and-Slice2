@@ -1,348 +1,283 @@
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// Система здоровья врага с анимацией урона, смерти и событиями для UI.
-/// Обрабатывает получение урона, неуязвимость, анимации и уничтожение объекта.
-/// </summary>
-public class EnemyHealth : MonoBehaviour
+namespace OverlordRiseAndSlice
 {
-    [Header("Настройки здоровья")]
-    [SerializeField] private int maxHealth = 50; // Максимальное здоровье
-    [SerializeField] private int currentHealth; // Текущее здоровье
-    
-    [Header("Настройки неуязвимости")]
-    [SerializeField] private float invulnerabilityDuration = 0.2f; // Длительность неуязвимости после урона
-    [SerializeField] private bool isInvulnerable = false; // Состояние неуязвимости
-    
-    [Header("Визуальные эффекты урона")]
-    [SerializeField] private Color damageColor = Color.red; // Цвет при получении урона
-    [SerializeField] private float damageFlashDuration = 0.1f; // Длительность вспышки урона
-    [SerializeField] private int damageFlashCount = 3; // Количество вспышек
-    
-    [Header("Настройки смерти")]
-    [SerializeField] private float deathDelay = 2f; // Задержка перед уничтожением после смерти
-    [SerializeField] private bool disableColliderOnDeath = true; // Отключать коллайдер при смерти
-    
-    [Header("Отладка")]
-    [SerializeField] private bool enableDebugLogs = true; // Включить логгирование
-    
-    // Состояние
-    private bool isDead = false;
-    
-    // Компоненты
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
-    private Animator animator;
-    private Collider2D enemyCollider;
-    private EnemyAI enemyAI;
-    
-    // События для UI и других систем
-    public System.Action<int, int> OnHealthChanged; // (currentHealth, maxHealth)
-    public System.Action OnDeath; // Уведомление о смерти
-    public System.Action<int> OnDamageTaken; // Уведомление о получении урона
-    
-    void Start()
-    {
-        InitializeComponents();
-        InitializeHealth();
-    }
-    
     /// <summary>
-    /// Инициализирует компоненты
+    /// Система здоровья врага с поддержкой IDamageable интерфейса
     /// </summary>
-    private void InitializeComponents()
+    public class EnemyHealth : MonoBehaviour, IDamageable
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
-        enemyCollider = GetComponent<Collider2D>();
-        enemyAI = GetComponent<EnemyAI>();
+        [Header("Настройки здоровья")]
+        [SerializeField] private int maxHealth = 30;
+        [SerializeField] private int currentHealth;
         
-        if (spriteRenderer != null)
+        [Header("Настройки неуязвимости")]
+        [SerializeField] private float invulnerabilityDuration = 0.5f;
+        [SerializeField] private bool isInvulnerable = false;
+        
+        [Header("Настройки визуальных эффектов")]
+        [SerializeField] private Color damageColor = Color.red;
+        [SerializeField] private float damageFlashDuration = 0.1f;
+        [SerializeField] private int damageFlashCount = 3;
+        
+        [Header("Настройки смерти")]
+        [SerializeField] private float deathDelay = 0.5f;
+        [SerializeField] private bool disableColliderOnDeath = true;
+        
+        [Header("Отладка")]
+        [SerializeField] private bool enableDebugLogs = true;
+        
+        // Компоненты
+        private Animator animator;
+        private SpriteRenderer spriteRenderer;
+        private Collider2D enemyCollider;
+        private Rigidbody2D rb2D;
+        
+        // События
+        public System.Action<int, int> OnHealthChanged; // current, max
+        public System.Action OnDeath;
+        public System.Action<int> OnDamageTaken;
+        
+        private void Awake()
         {
-            originalColor = spriteRenderer.color;
+            InitializeComponents();
         }
         
-        if (enableDebugLogs)
+        private void Start()
         {
-            Debug.Log($"EnemyHealth: Компоненты инициализированы для {gameObject.name}");
-        }
-    }
-    
-    /// <summary>
-    /// Инициализирует здоровье
-    /// </summary>
-    private void InitializeHealth()
-    {
-        currentHealth = maxHealth;
-        
-        // Уведомляем о начальном состоянии здоровья
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-        
-        if (enableDebugLogs)
-        {
-            Debug.Log($"EnemyHealth: Здоровье инициализировано {currentHealth}/{maxHealth}");
-        }
-    }
-    
-    /// <summary>
-    /// Наносит урон врагу
-    /// </summary>
-    /// <param name="amount">Количество урона</param>
-    public void TakeDamage(int amount)
-    {
-        // Проверяем возможность получения урона
-        if (isDead || isInvulnerable || amount <= 0)
-        {
-            if (enableDebugLogs && amount <= 0)
+            currentHealth = maxHealth;
+            
+            if (enableDebugLogs)
             {
-                Debug.LogWarning($"EnemyHealth: Попытка нанести некорректный урон: {amount}");
+                Debug.Log($"EnemyHealth: Инициализировано здоровье {currentHealth}/{maxHealth}");
             }
-            return;
         }
         
-        // Применяем урон
-        int actualDamage = Mathf.Min(amount, currentHealth);
-        currentHealth -= actualDamage;
-        
-        if (enableDebugLogs)
+        private void InitializeComponents()
         {
-            Debug.Log($"EnemyHealth: {gameObject.name} получил {actualDamage} урона. Здоровье: {currentHealth}/{maxHealth}");
+            animator = GetComponent<Animator>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            enemyCollider = GetComponent<Collider2D>();
+            rb2D = GetComponent<Rigidbody2D>();
+            
+            if (enableDebugLogs)
+            {
+                Debug.Log("EnemyHealth: Компоненты инициализированы");
+            }
         }
         
-        // Уведомляем о получении урона
-        OnDamageTaken?.Invoke(actualDamage);
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        #region IDamageable Implementation
         
-        // Запускаем визуальные эффекты урона
-        StartCoroutine(DamageFlashRoutine());
-        
-        // Запускаем неуязвимость
-        StartCoroutine(InvulnerabilityRoutine());
-        
-        // Проверяем смерть
-        if (currentHealth <= 0)
+        /// <summary>
+        /// Наносит урон врагу (реализация IDamageable)
+        /// </summary>
+        /// <param name="amount">Количество урона</param>
+        public void TakeDamage(int amount)
         {
-            Die();
-        }
-        else
-        {
-            // Анимация получения урона (если есть аниматор)
+            if (!CanTakeDamage()) return;
+            
+            // Наносим урон
+            currentHealth = Mathf.Max(0, currentHealth - amount);
+            
+            // Уведомляем о получении урона
+            OnDamageTaken?.Invoke(amount);
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            
+            // Запускаем эффекты
+            StartCoroutine(DamageFlashRoutine());
+            StartCoroutine(InvulnerabilityRoutine());
+            
+            // Запускаем анимацию получения урона
             if (animator != null)
             {
                 animator.SetTrigger("TakeDamage");
             }
-        }
-    }
-    
-    /// <summary>
-    /// Обрабатывает смерть врага
-    /// </summary>
-    private void Die()
-    {
-        if (isDead) return;
-        
-        isDead = true;
-        
-        if (enableDebugLogs)
-        {
-            Debug.Log($"EnemyHealth: {gameObject.name} умер");
-        }
-        
-        // Отключаем коллайдер
-        if (disableColliderOnDeath && enemyCollider != null)
-        {
-            enemyCollider.enabled = false;
-        }
-        
-        // Отключаем ИИ
-        if (enemyAI != null)
-        {
-            enemyAI.enabled = false;
-        }
-        
-        // Запускаем анимацию смерти
-        if (animator != null)
-        {
-            animator.SetTrigger("Death");
-            animator.SetBool("isDead", true);
-        }
-        
-        // Уведомляем о смерти
-        OnDeath?.Invoke();
-        
-        // Уничтожаем объект через задержку
-        Destroy(gameObject, deathDelay);
-        
-        if (enableDebugLogs)
-        {
-            Debug.Log($"EnemyHealth: {gameObject.name} будет уничтожен через {deathDelay} секунд");
-        }
-    }
-    
-    /// <summary>
-    /// Корутина вспышки при получении урона
-    /// </summary>
-    private IEnumerator DamageFlashRoutine()
-    {
-        if (spriteRenderer == null) yield break;
-        
-        for (int i = 0; i < damageFlashCount; i++)
-        {
-            // Меняем цвет на цвет урона
-            spriteRenderer.color = damageColor;
-            yield return new WaitForSeconds(damageFlashDuration);
             
-            // Возвращаем оригинальный цвет
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(damageFlashDuration);
-        }
-    }
-    
-    /// <summary>
-    /// Корутина неуязвимости после получения урона
-    /// </summary>
-    private IEnumerator InvulnerabilityRoutine()
-    {
-        isInvulnerable = true;
-        
-        if (enableDebugLogs)
-        {
-            Debug.Log($"EnemyHealth: {gameObject.name} стал неуязвимым на {invulnerabilityDuration} секунд");
+            if (enableDebugLogs)
+            {
+                Debug.Log($"EnemyHealth: Получен урон {amount}. Здоровье: {currentHealth}/{maxHealth}");
+            }
+            
+            // Проверяем смерть
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
         
-        yield return new WaitForSeconds(invulnerabilityDuration);
-        
-        isInvulnerable = false;
-        
-        if (enableDebugLogs)
+        /// <summary>
+        /// Проверяет, может ли враг получать урон
+        /// </summary>
+        /// <returns>true если может получать урон</returns>
+        public bool CanTakeDamage()
         {
-            Debug.Log($"EnemyHealth: {gameObject.name} больше не неуязвим");
+            return !isInvulnerable && currentHealth > 0;
         }
-    }
-    
-    /// <summary>
-    /// Восстанавливает здоровье
-    /// </summary>
-    /// <param name="amount">Количество восстанавливаемого здоровья</param>
-    public void RestoreHealth(int amount)
-    {
-        if (isDead || amount <= 0) return;
         
-        int oldHealth = currentHealth;
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-        int actualRestore = currentHealth - oldHealth;
-        
-        if (actualRestore > 0)
+        /// <summary>
+        /// Получает текущее здоровье врага
+        /// </summary>
+        /// <returns>Текущее здоровье</returns>
+        public int GetCurrentHealth()
         {
+            return currentHealth;
+        }
+        
+        /// <summary>
+        /// Получает максимальное здоровье врага
+        /// </summary>
+        /// <returns>Максимальное здоровье</returns>
+        public int GetMaxHealth()
+        {
+            return maxHealth;
+        }
+        
+        #endregion
+        
+        private IEnumerator DamageFlashRoutine()
+        {
+            if (spriteRenderer == null) yield break;
+            
+            Color originalColor = spriteRenderer.color;
+            
+            for (int i = 0; i < damageFlashCount; i++)
+            {
+                spriteRenderer.color = damageColor;
+                yield return new WaitForSeconds(damageFlashDuration);
+                spriteRenderer.color = originalColor;
+                yield return new WaitForSeconds(damageFlashDuration);
+            }
+        }
+        
+        private IEnumerator InvulnerabilityRoutine()
+        {
+            isInvulnerable = true;
+            
+            yield return new WaitForSeconds(invulnerabilityDuration);
+            
+            isInvulnerable = false;
+            
+            if (enableDebugLogs)
+            {
+                Debug.Log("EnemyHealth: Неуязвимость закончилась");
+            }
+        }
+        
+        private void Die()
+        {
+            if (enableDebugLogs)
+            {
+                Debug.Log("EnemyHealth: Враг умер!");
+            }
+            
+            // Уведомляем о смерти
+            OnDeath?.Invoke();
+            
+            // Запускаем анимацию смерти
+            if (animator != null)
+            {
+                animator.SetTrigger("Death");
+            }
+            
+            // Отключаем коллайдер
+            if (disableColliderOnDeath && enemyCollider != null)
+            {
+                enemyCollider.enabled = false;
+            }
+            
+            // Останавливаем движение
+            if (rb2D != null)
+            {
+                rb2D.velocity = Vector2.zero;
+                rb2D.isKinematic = true;
+            }
+            
+            // Уничтожаем объект через задержку
+            StartCoroutine(DestroyAfterDelay());
+        }
+        
+        private IEnumerator DestroyAfterDelay()
+        {
+            yield return new WaitForSeconds(deathDelay);
+            
+            if (enableDebugLogs)
+            {
+                Debug.Log("EnemyHealth: Уничтожение врага");
+            }
+            
+            Destroy(gameObject);
+        }
+        
+        #region Публичные методы для других систем
+        
+        /// <summary>
+        /// Восстанавливает здоровье врага
+        /// </summary>
+        /// <param name="amount">Количество здоровья для восстановления</param>
+        public void RestoreHealth(int amount)
+        {
+            currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
             
             if (enableDebugLogs)
             {
-                Debug.Log($"EnemyHealth: {gameObject.name} восстановил {actualRestore} здоровья. Здоровье: {currentHealth}/{maxHealth}");
+                Debug.Log($"EnemyHealth: Восстановлено {amount} здоровья. Здоровье: {currentHealth}/{maxHealth}");
             }
         }
-    }
-    
-    /// <summary>
-    /// Устанавливает максимальное здоровье
-    /// </summary>
-    /// <param name="newMaxHealth">Новое максимальное здоровье</param>
-    public void SetMaxHealth(int newMaxHealth)
-    {
-        if (newMaxHealth <= 0) return;
         
-        float healthRatio = (float)currentHealth / maxHealth;
-        maxHealth = newMaxHealth;
-        currentHealth = Mathf.RoundToInt(maxHealth * healthRatio);
-        
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-        
-        if (enableDebugLogs)
+        /// <summary>
+        /// Устанавливает максимальное здоровье
+        /// </summary>
+        /// <param name="newMaxHealth">Новое максимальное здоровье</param>
+        public void SetMaxHealth(int newMaxHealth)
         {
-            Debug.Log($"EnemyHealth: Максимальное здоровье изменено на {maxHealth}. Текущее: {currentHealth}");
-        }
-    }
-    
-    #region Публичные методы для других систем
-    
-    /// <summary>
-    /// Проверяет, мёртв ли враг
-    /// </summary>
-    public bool IsDead()
-    {
-        return isDead;
-    }
-    
-    /// <summary>
-    /// Проверяет, неуязвим ли враг
-    /// </summary>
-    public bool IsInvulnerable()
-    {
-        return isInvulnerable;
-    }
-    
-    /// <summary>
-    /// Получает текущее здоровье
-    /// </summary>
-    public int GetCurrentHealth()
-    {
-        return currentHealth;
-    }
-    
-    /// <summary>
-    /// Получает максимальное здоровье
-    /// </summary>
-    public int GetMaxHealth()
-    {
-        return maxHealth;
-    }
-    
-    /// <summary>
-    /// Получает процент здоровья (0.0 - 1.0)
-    /// </summary>
-    public float GetHealthPercentage()
-    {
-        return maxHealth > 0 ? (float)currentHealth / maxHealth : 0f;
-    }
-    
-    /// <summary>
-    /// Мгновенно убивает врага (для отладки)
-    /// </summary>
-    public void InstantKill()
-    {
-        if (enableDebugLogs)
-        {
-            Debug.Log($"EnemyHealth: {gameObject.name} мгновенно убит");
+            maxHealth = newMaxHealth;
+            currentHealth = Mathf.Min(currentHealth, maxHealth);
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            
+            if (enableDebugLogs)
+            {
+                Debug.Log($"EnemyHealth: Максимальное здоровье изменено на {maxHealth}");
+            }
         }
         
-        currentHealth = 0;
-        Die();
-    }
-    
-    #endregion
-    
-    #region События Unity
-    
-    /// <summary>
-    /// Отображает информацию о здоровье в инспекторе
-    /// </summary>
-    void OnValidate()
-    {
-        if (maxHealth <= 0)
+        /// <summary>
+        /// Мгновенно убивает врага
+        /// </summary>
+        public void InstantKill()
         {
-            maxHealth = 1;
+            currentHealth = 0;
+            TakeDamage(0); // Запускает процесс смерти
         }
         
-        if (Application.isPlaying)
+        /// <summary>
+        /// Проверяет, мертв ли враг
+        /// </summary>
+        /// <returns>true если враг мертв</returns>
+        public bool IsDead()
         {
-            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            return currentHealth <= 0;
         }
-        else
+        
+        /// <summary>
+        /// Проверяет, неуязвим ли враг
+        /// </summary>
+        /// <returns>true если враг неуязвим</returns>
+        public bool IsInvulnerable()
         {
-            currentHealth = maxHealth;
+            return isInvulnerable;
         }
+        
+        /// <summary>
+        /// Получает процент оставшегося здоровья
+        /// </summary>
+        /// <returns>Процент здоровья (0-1)</returns>
+        public float GetHealthPercentage()
+        {
+            return maxHealth > 0 ? (float)currentHealth / maxHealth : 0f;
+        }
+        
+        #endregion
     }
-    
-    #endregion
 } 
