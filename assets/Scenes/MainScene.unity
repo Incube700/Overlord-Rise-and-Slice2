@@ -397,6 +397,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  dashSpeed: 15
+  dashDuration: 0.2
+  dashCooldown: 1
+  dashMakesInvulnerable: 1
   enableDebugLogs: 1
 --- !u!61 &561139394
 BoxCollider2D:
@@ -556,12 +560,15 @@ MonoBehaviour:
   attackDamage: 25
   attackRange: 1.2
   attackCooldown: 0.4
+  attackDuration: 0.3
   attackOffset: {x: 1, y: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
   attackColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.1
+  enableDebugLogs: 1
+  showAttackGizmos: 1
 --- !u!1 &846413974
 GameObject:
   m_ObjectHideFlags: 0
@@ -866,6 +873,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 1.5, z: 0}
+  followTarget: 1
+  faceCamera: 1
+  hideWhenFull: 1
+  hideWhenDead: 1
+  fadeSpeed: 2
+  barSize: {x: 1, y: 0.1}
+  fullHealthColor: {r: 0, g: 1, b: 0, a: 1}
+  halfHealthColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  lowHealthColor: {r: 1, g: 0, b: 0, a: 1}
+  backgroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.8}
+  lowHealthThreshold: 0.25
+  enableDebugLogs: 0
 --- !u!114 &1246146935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -879,7 +898,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  invulnerabilityTime: 0.5
+  currentHealth: 100
+  invulnerabilityDuration: 0.2
+  isInvulnerable: 0
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  damageFlashDuration: 0.1
+  damageFlashCount: 3
+  deathDelay: 2
+  disableColliderOnDeath: 1
+  enableDebugLogs: 1
 --- !u!114 &1246146936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -896,6 +923,8 @@ MonoBehaviour:
   detectionRange: 10
   attackRange: 1.5
   attackCooldown: 1
+  enableDebugLogs: 1
+  showGizmos: 1
 --- !u!114 &1246146937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25761,7 +25790,7 @@ Transform:
   m_GameObject: {fileID: 2084358681}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.49, y: 0.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

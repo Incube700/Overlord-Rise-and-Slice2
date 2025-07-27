@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638889891410000000
-    m_Hash: 4054089619
+      ticks: 638892014260000000
+    m_Hash: 3282749251
   m_LockFileStatus:
     m_FilePath: "/Users/serg/Desktop/Proje\u0441ts/OverlordRiseAndSlice/Overlord-Rise-and-Slice2/Packages/packages-lock.json"
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638889891410000000
-    m_Hash: 1378185111
+      ticks: 638892014260000000
+    m_Hash: 2608995448
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -355,6 +355,128 @@ m_ResolvedPackages:
       scopePatternExpression: 
       message: 
       readMoreLink: 
+- packageId: com.unity.ai.navigation@2.0.8
+  testable: 0
+  isDirectDependency: 1
+  version: 2.0.8
+  source: 1
+  resolvedPath: "/Users/serg/Desktop/Proje\u0441ts/OverlordRiseAndSlice/Overlord-Rise-and-Slice2/Library/PackageCache/com.unity.ai.navigation@eb5635ad590d"
+  assetPath: Packages/com.unity.ai.navigation
+  name: com.unity.ai.navigation
+  displayName: AI Navigation
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: 
+  description: The AI Navigation package contains high-level components that allow
+    you to use navmeshes to incorporate navigation and pathfinding in your game.
+    With this package installed you can build and use navmeshes at runtime and at
+    edit time, create dynamic obstacles, and use links to allow specific actions
+    (like jumping) as your characters navigate between navmeshes.
+  errors: []
+  versions:
+    all:
+    - 1.0.0-exp.2
+    - 1.0.0-exp.3
+    - 1.0.0-exp.4
+    - 1.1.0-pre.1
+    - 1.1.0-pre.2
+    - 1.1.1
+    - 1.1.3
+    - 1.1.4
+    - 1.1.5
+    - 1.1.6
+    - 1.1.7
+    - 2.0.0-pre.3
+    - 2.0.0-pre.4
+    - 2.0.0
+    - 2.0.3
+    - 2.0.4
+    - 2.0.5
+    - 2.0.6
+    - 2.0.7
+    - 2.0.8
+    compatible:
+    - 2.0.8
+    recommended: 2.0.8
+    deprecated: []
+  dependencies:
+  - name: com.unity.modules.ai
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.modules.ai
+    version: 1.0.0
+  keywords:
+  - carving
+  - mesh
+  - navigation
+  - navmesh
+  - NavMesh
+  - navmesh agent
+  - navmesh link
+  - navmeshlink
+  - navmesh modifier
+  - navmeshmodifier
+  - navmesh modifier volume
+  - navmeshmodifiervolume
+  - navmesh obstacle
+  - navmesh surface
+  - navmeshsurface
+  - offmesh link
+  - off-mesh link
+  - pathfinding
+  registry:
+    id: main
+    name: 
+    url: https://packages.unity.com
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+    compliance:
+      status: 0
+      violations: []
+  hideInEditor: 1
+  entitlements:
+    licensingModel: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638841129733020000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.cds.internal.unity3d.com/unity/com.unity.ai.navigation.git
+    revision: edeb8e889d1eedf4001fa41bdab7d69d01a62f24
+    path: 
+  unityLifecycle:
+    version: 2.0.8
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  git:
+    hash: 
+    revision: 
+  upmReserved: '{"changelog":"### Fixed\n* Samples will now use appropriate material
+    colors in projects using HDRP or URP. Install the **com.unity.shadergraph** package
+    to show the materials correctly for built-in render pipeline projects."}'
+  assetStore:
+    productId: 
+  fingerprint: eb5635ad590d47cef2a5c920d9475cc222db3f67
+  editorCompatibility:
+    compatibilityLevel: 0
+    minimumPackageVersion: 2.0.8
+    minimumUnityVersion: 6000.0.0a1
+  compliance:
+    status: 0
+    violation:
+      scopePatternExpression: 
+      message: 
+      readMoreLink: 
 - packageId: com.unity.collab-proxy@2.8.2
   testable: 0
   isDirectDependency: 1
@@ -521,6 +643,199 @@ m_ResolvedPackages:
     compatibilityLevel: 0
     minimumPackageVersion: 2.8.2
     minimumUnityVersion: 2021.3.0f1
+  compliance:
+    status: 0
+    violation:
+      scopePatternExpression: 
+      message: 
+      readMoreLink: 
+- packageId: com.unity.inputsystem@1.14.1
+  testable: 0
+  isDirectDependency: 1
+  version: 1.14.1
+  source: 1
+  resolvedPath: "/Users/serg/Desktop/Proje\u0441ts/OverlordRiseAndSlice/Overlord-Rise-and-Slice2/Library/PackageCache/com.unity.inputsystem@978211393e28"
+  assetPath: Packages/com.unity.inputsystem
+  name: com.unity.inputsystem
+  displayName: Input System
+  author:
+    name: 
+    email: 
+    url: 
+  category: 
+  type: 
+  description: A new input system which can be used as a more extensible and customizable
+    alternative to Unity's classic input system in UnityEngine.Input.
+  errors: []
+  versions:
+    all:
+    - 0.1.2-preview
+    - 0.2.0-preview
+    - 0.2.1-preview
+    - 0.2.6-preview
+    - 0.2.8-preview
+    - 0.2.10-preview
+    - 0.9.0-preview
+    - 0.9.1-preview
+    - 0.9.2-preview
+    - 0.9.3-preview
+    - 0.9.4-preview
+    - 0.9.5-preview
+    - 0.9.6-preview
+    - 1.0.0-preview
+    - 1.0.0-preview.1
+    - 1.0.0-preview.2
+    - 1.0.0-preview.3
+    - 1.0.0-preview.4
+    - 1.0.0-preview.5
+    - 1.0.0-preview.6
+    - 1.0.0-preview.7
+    - 1.0.0
+    - 1.0.1
+    - 1.0.2
+    - 1.1.0-pre.5
+    - 1.1.0-pre.6
+    - 1.1.0-preview.1
+    - 1.1.0-preview.2
+    - 1.1.0-preview.3
+    - 1.1.1
+    - 1.2.0
+    - 1.3.0
+    - 1.4.1
+    - 1.4.2
+    - 1.4.3
+    - 1.4.4
+    - 1.5.0
+    - 1.5.1
+    - 1.6.1
+    - 1.6.3
+    - 1.7.0
+    - 1.8.0-pre.1
+    - 1.8.0-pre.2
+    - 1.8.0
+    - 1.8.1
+    - 1.8.2
+    - 1.9.0
+    - 1.10.0
+    - 1.11.0
+    - 1.11.1
+    - 1.11.2
+    - 1.12.0
+    - 1.13.0
+    - 1.13.1
+    - 1.14.0
+    - 1.14.1
+    compatible:
+    - 1.14.1
+    recommended: 1.14.1
+    deprecated: []
+  dependencies:
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  resolvedDependencies:
+  - name: com.unity.modules.uielements
+    version: 1.0.0
+  - name: com.unity.modules.ui
+    version: 1.0.0
+  - name: com.unity.modules.imgui
+    version: 1.0.0
+  - name: com.unity.modules.jsonserialize
+    version: 1.0.0
+  - name: com.unity.modules.hierarchycore
+    version: 1.0.0
+  keywords:
+  - input
+  - events
+  - keyboard
+  - mouse
+  - gamepad
+  - touch
+  - vr
+  - xr
+  registry:
+    id: main
+    name: 
+    url: https://packages.unity.com
+    scopes: []
+    isDefault: 1
+    capabilities: 7
+    configSource: 0
+    compliance:
+      status: 0
+      violations: []
+  hideInEditor: 1
+  entitlements:
+    licensingModel: 1
+  isAssetStorePackage: 0
+  datePublishedTicks: 638877313747820000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.14/manual/index.html
+  hasRepository: 1
+  repository:
+    type: git
+    url: https://github.com/Unity-Technologies/InputSystem.git
+    revision: 5f79385f7037a45b3871a30c4bacfbfa0aedb978
+    path: 
+  unityLifecycle:
+    version: 1.14.1
+    nextVersion: 
+    recommendedVersion: 
+    isDeprecated: 0
+    deprecationMessage: 
+  isDeprecated: 0
+  deprecationMessage: 
+  git:
+    hash: 
+    revision: 
+  upmReserved: '{"changelog":"### Added\n\n- Support for Xbox controllers over USB
+    on macOS, using macOS''s default driver. [ISXB-1548]\n\n### Fixed\n- Fixed an
+    analytics event being invoked twice when the Save button in the Actions view
+    was pressed. [ISXB-1378](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1378)\n-
+    Fixed an issue causing a number of errors to be displayed when using `InputTestFixture`
+    in playmode tests with domain reloading disabled on playmode entry. [ISXB-1446](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1446)\n-
+    Fixed issue where user was not prompted to save changes when loading a second
+    input actions asset into an already opened editor. [ISXB-1343](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1343)\n-
+    Fixed the on hover behaviour of the two plus buttons in the Input Actions Editor
+    window [ISXB-1327](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1327)\n-
+    Fixed an issue on macOS which didn''t detect up-left DPAD presses for Xbox controllers.
+    [ISXB-810](https://issuetracker.unity3d.com/issues/macos-d-pad-upper-left-corner-is-not-logged-with-the-xbox-controller)\n-
+    Fixed Input Actions code generation overwriting user files when the names happened
+    to match. [ISXB-1257](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1257)\n-
+    Fixed Input Actions code generation using locale-dependent rules when lowercasing
+    and uppercasing strings. [ISXB-1406]\n- Fixed an issue when providing JoinPlayer
+    with a specific split screen index. [ISXB-897](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-897)\n-
+    Fixed Inspector Window being refreshed all the time when a PlayerInput component
+    is present with Invoke Unity Events nofication mode chosen [ISXB-1448](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1448)\n-
+    Fixed an issue where an action with a name containing a slash \"/\" could not
+    be found via `InputActionAsset.FindAction(string,bool)`. [ISXB-1306](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1306).\n-
+    Fixed Gamepad stick up/down inputs that were not recognized in WebGL. [ISXB-1090](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1090)\n-
+    Fixed reenabling the VirtualMouseInput component may sometimes lead to NullReferenceException.
+    [ISXB-1096](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1096)\n-
+    Fixed the default button press point not being respected in Editor (as well as
+    some other Touchscreen properties). [ISXB-1152](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1152)\n-
+    Fixed the TreeView compilation warnings when used with Unity 6.2 beta (ISX-2320)\n-
+    Fixed actions being reset when disabling the InputSystemUIInputModule component
+    [ISXB-1493](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1493)\n-
+    Fixed a memory leak when disabling and enabling the InputSystemUIInputModule
+    component at runtime [ISXB-1573](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1573)\n-
+    Fixed all InputControls being changed at once when you change just one by reverting
+    `2a37caac288ac09bc9122234339dc5df8d3a0ca6`, which was an attempt at fixing [ISXB-1221]
+    that introduced this regression [ISXB-1531] (https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1493)\n-
+    Fixed PlayerInput component automatically switching away from the default ActionMap
+    set to ''None''.\n- Fixed a console error being shown when targeting visionOS
+    builds in 2022.3.\n- Fixed a Tap Interaction issue with analog controls. The
+    Tap interaction would keep re-starting after timeout. [ISXB-627](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-627)\n-
+    Fixed the defaultActionMap dropdown in the PlayerInput component defaulting to
+    <None> instead of the first ActionMap.\n- Fixed TrackedPoseDriver stops updating
+    position and rotation when device is added after its initialization. [ISXB-1555](https://issuetracker.unity3d.com/product/unity/issues/guid/ISXB-1555)\n-
+    Fixed PlayerInput component not working with C# Wrappers (ISXB-1535). This reverted
+    changes done to fix [ISXB-920](https://issuetra"}'
+  assetStore:
+    productId: 
+  fingerprint: 978211393e28699aba338ed157cef347ac565bbf
+  editorCompatibility:
+    compatibilityLevel: 0
+    minimumPackageVersion: 1.14.1
+    minimumUnityVersion: 2021.3.0a1
   compliance:
     status: 0
     violation:
