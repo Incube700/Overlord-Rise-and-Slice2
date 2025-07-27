@@ -12,20 +12,20 @@ namespace OverlordRiseAndSlice
         [Header("Настройки статуи")]
         [SerializeField] private StatueType statueType = StatueType.OverlordMemory;
         [SerializeField] private bool glowsWhenNear = true;
-        [SerializeField] private float glowIntensity = 2f;
+        [SerializeField] private float glowIntensity = 2f; // Используется в PulseGlow()
         [SerializeField] private Color glowColor = Color.blue;
 
         [Header("Эффекты восстановления силы")]
         [SerializeField] private int healthRestoreAmount = 10;
         [SerializeField] private float powerBoostDuration = 30f;
-        [SerializeField] private float powerBoostMultiplier = 1.2f;
+        [SerializeField] private float powerBoostMultiplier = 1.2f; // Используется в GivePowerBoost()
 
         [Header("Анимация")]
         [SerializeField] private float activationAnimationDuration = 2f;
         [SerializeField] private AnimationCurve activationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
         // Компоненты для эффектов
-        private SpriteRenderer spriteRenderer;
+        private SpriteRenderer statueSpriteRenderer;
         private Animator animator;
         private bool isActivated = false;
         private Color originalColor;
@@ -46,13 +46,13 @@ namespace OverlordRiseAndSlice
         void SetupStatueSpecifics()
         {
             // Настраиваем спрайт для эффектов
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
+            statueSpriteRenderer = GetComponent<SpriteRenderer>();
+            if (statueSpriteRenderer != null)
             {
-                originalColor = spriteRenderer.color;
+                originalColor = statueSpriteRenderer.color;
                 if (glowsWhenNear)
                 {
-                    spriteRenderer.color = Color.Lerp(originalColor, glowColor, 0.3f);
+                    statueSpriteRenderer.color = Color.Lerp(originalColor, glowColor, 0.3f);
                 }
             }
 
@@ -189,7 +189,7 @@ namespace OverlordRiseAndSlice
             }
 
             // Эффект свечения
-            if (spriteRenderer != null)
+            if (statueSpriteRenderer != null)
             {
                 float elapsedTime = 0f;
                 while (elapsedTime < activationAnimationDuration)
@@ -197,16 +197,16 @@ namespace OverlordRiseAndSlice
                     float progress = elapsedTime / activationAnimationDuration;
                     float curveValue = activationCurve.Evaluate(progress);
 
-                    spriteRenderer.color = Color.Lerp(originalColor, glowColor, curveValue);
-                    spriteRenderer.transform.localScale = Vector3.one * (1f + curveValue * 0.2f);
+                    statueSpriteRenderer.color = Color.Lerp(originalColor, glowColor, curveValue);
+                    statueSpriteRenderer.transform.localScale = Vector3.one * (1f + curveValue * 0.2f);
 
                     elapsedTime += Time.deltaTime;
                     yield return null;
                 }
 
                 // Возвращаем к нормальному состоянию
-                spriteRenderer.color = originalColor;
-                spriteRenderer.transform.localScale = Vector3.one;
+                statueSpriteRenderer.color = originalColor;
+                statueSpriteRenderer.transform.localScale = Vector3.one;
             }
 
             // Даём награды
@@ -297,7 +297,7 @@ namespace OverlordRiseAndSlice
             base.ShowInteractionPrompt();
 
             // Добавляем эффект пульсации при приближении
-            if (glowsWhenNear && spriteRenderer != null)
+            if (glowsWhenNear && statueSpriteRenderer != null)
             {
                 StartCoroutine(PulseGlow());
             }
@@ -308,18 +308,18 @@ namespace OverlordRiseAndSlice
         /// </summary>
         IEnumerator PulseGlow()
         {
-                         while (playerInRange && !isActivated)
+            while (playerInRange && !isActivated)
             {
                 float pulse = Mathf.Sin(Time.time * 2f) * 0.3f + 0.7f;
-                spriteRenderer.color = Color.Lerp(originalColor, glowColor, pulse * 0.5f);
+                statueSpriteRenderer.color = Color.Lerp(originalColor, glowColor, pulse * 0.5f);
 
                 yield return null;
             }
 
             // Возвращаем к нормальному состоянию
-            if (spriteRenderer != null)
+            if (statueSpriteRenderer != null)
             {
-                spriteRenderer.color = originalColor;
+                statueSpriteRenderer.color = originalColor;
             }
         }
 
