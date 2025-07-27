@@ -1,5 +1,4 @@
 {
-    "version": 1,
     "name": "InputActions",
     "maps": [
         {
@@ -28,33 +27,6 @@
                     "name": "Dash",
                     "type": "Button",
                     "id": "e8e8e8e8-e8e8-e8e8-e8e8-e8e8e8e8e8e8",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "0485c191-8b54-40c6-889a-7a3d8ba2eb2e",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "New action1",
-                    "type": "Button",
-                    "id": "dd8d29ac-e6a5-401c-b095-fb8a4f9c6a2d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "New action2",
-                    "type": "Button",
-                    "id": "d4eb3d1c-44bb-494d-bb3e-924f4ecbdc77",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -279,39 +251,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5a590087-cec8-4a85-8a46-82cb14ec9f13",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a8f6a705-400e-4d32-bdda-cf593fcd0f89",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action1",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cda760c2-ec0e-4b3a-886d-5720045f687f",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "New action2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
