@@ -29,7 +29,7 @@ public class EnemyHealthBar : MonoBehaviour
     [SerializeField] private bool enableDebugLogs = false; // Включить логгирование
     
     // Компоненты и состояние
-    private EnemyHealth enemyHealth;
+    private SimpleHealthSystem enemyHealth;
     private Transform targetTransform;
     private Camera mainCamera;
     
@@ -76,10 +76,10 @@ public class EnemyHealthBar : MonoBehaviour
             targetTransform = transform.parent;
         }
         
-        // Получаем EnemyHealth
+        // Получаем SimpleHealthSystem
         if (targetTransform != null)
         {
-            enemyHealth = targetTransform.GetComponent<EnemyHealth>();
+            enemyHealth = targetTransform.GetComponent<SimpleHealthSystem>();
         }
         
         // Получаем основную камеру

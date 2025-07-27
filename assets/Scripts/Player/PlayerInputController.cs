@@ -12,6 +12,7 @@ namespace OverlordRiseAndSlice
         [Header("Компоненты")]
         [SerializeField] private PlayerMovement playerMovement;
         [SerializeField] private PlayerCombat playerCombat;
+        [SerializeField] private PlayerHealthSystem playerHealth;
         
         [Header("Настройки")]
         [SerializeField] private bool enableDebugLogs = true;
@@ -41,6 +42,9 @@ namespace OverlordRiseAndSlice
                 
             if (playerCombat == null)
                 playerCombat = GetComponent<PlayerCombat>();
+                
+            if (playerHealth == null)
+                playerHealth = GetComponent<PlayerHealthSystem>();
                 
             if (enableDebugLogs)
             {

@@ -14,7 +14,8 @@ public class EnemyAI : MonoBehaviour
 
     private Transform playerTransform;
     private Rigidbody2D rb2D;
-    private EnemyHealth enemyHealth;
+    private SimpleHealthSystem enemyHealth;
+    private SimpleAttackSystem enemyAttack;
     private Animator animator;
     private float lastAttackTime;
     
@@ -25,7 +26,8 @@ public class EnemyAI : MonoBehaviour
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
-        enemyHealth = GetComponent<EnemyHealth>();
+        enemyHealth = GetComponent<SimpleHealthSystem>();
+        enemyAttack = GetComponent<SimpleAttackSystem>();
         animator = GetComponent<Animator>();
         
         // Ищем игрока по тегу
@@ -64,10 +66,9 @@ public class EnemyAI : MonoBehaviour
                 SetMoving(false);
                 
                 // Атакуем игрока
-                if (Time.time >= lastAttackTime + attackCooldown)
+                if (enemyAttack != null && enemyAttack.CanAttack())
                 {
-                    AttackPlayer();
-                    lastAttackTime = Time.time;
+                    enemyAttack.PerformAttack();
                 }
             }
             else
@@ -94,35 +95,7 @@ public class EnemyAI : MonoBehaviour
         rb2D.MovePosition(newPosition);
     }
 
-    /// <summary>
-    /// Атака игрока
-    /// </summary>
-    private void AttackPlayer()
-    {
-        SetAttacking(true);
-        
-        if (enableDebugLogs)
-        {
-            Debug.Log("EnemyAI: Enemy attacks player!");
-        }
-        
-        // TODO: Реализовать логику нанесения урона игроку
-        // Здесь можно добавить:
-        // - PlayerHealth.TakeDamage()
-        // - Звуковые эффекты
-        // - Эффекты частиц
-        
-        // Сбрасываем состояние атаки через короткое время
-        Invoke(nameof(EndAttack), 0.5f);
-    }
-    
-    /// <summary>
-    /// Завершает анимацию атаки
-    /// </summary>
-    private void EndAttack()
-    {
-        SetAttacking(false);
-    }
+
 
     /// <summary>
     /// Возвращает расстояние до игрока
@@ -151,7 +124,8 @@ public class EnemyAI : MonoBehaviour
     public bool CanAttackPlayer()
     {
         if (playerTransform == null) return false;
-        return GetDistanceToPlayer() <= attackRange;
+        if (enemyAttack == null) return false;
+        return GetDistanceToPlayer() <= attackRange && enemyAttack.CanAttack();
     }
     
     /// <summary>

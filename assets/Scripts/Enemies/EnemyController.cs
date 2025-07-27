@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private int enemyLevel = 1; // Уровень врага
     
     [Header("Компоненты (автоматически найдены)")]
-    [SerializeField] private EnemyHealth enemyHealth; // Система здоровья
+    [SerializeField] private SimpleHealthSystem enemyHealth; // Система здоровья
     [SerializeField] private EnemyAI enemyAI; // Искусственный интеллект
     [SerializeField] private EnemyHealthBar healthBar; // Полоска здоровья
     [SerializeField] private Animator animator; // Аниматор
@@ -66,7 +66,7 @@ public class EnemyController : MonoBehaviour
     {
         // Находим основные компоненты
         if (enemyHealth == null)
-            enemyHealth = GetComponent<EnemyHealth>();
+            enemyHealth = GetComponent<SimpleHealthSystem>();
         
         if (enemyAI == null)
             enemyAI = GetComponent<EnemyAI>();
@@ -330,7 +330,7 @@ public class EnemyController : MonoBehaviour
     /// <summary>
     /// Получает компонент здоровья
     /// </summary>
-    public EnemyHealth GetEnemyHealth()
+    public SimpleHealthSystem GetEnemyHealth()
     {
         return enemyHealth;
     }

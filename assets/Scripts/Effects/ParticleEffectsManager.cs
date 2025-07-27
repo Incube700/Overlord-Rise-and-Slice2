@@ -392,21 +392,21 @@ namespace OverlordRiseAndSlice
         
         private string effectType;
         private ParticleEffectsManager manager;
-        private ParticleSystem particleSystem;
+        private ParticleSystem particleEffect;
         private Coroutine autoDestroyCoroutine;
         
         public void Initialize(string effectType, ParticleEffectsManager manager)
         {
             this.effectType = effectType;
             this.manager = manager;
-            particleSystem = GetComponent<ParticleSystem>();
+            particleEffect = GetComponent<ParticleSystem>();
         }
         
         public void PlayEffect(float duration = -1f)
         {
-            if (particleSystem != null)
+            if (particleEffect != null)
             {
-                particleSystem.Play();
+                particleEffect.Play();
             }
             
             if (useAutoDestroy)
