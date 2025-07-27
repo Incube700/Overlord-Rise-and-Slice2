@@ -108,7 +108,7 @@ namespace OverlordRiseAndSlice
         private void SubscribeToEvents()
         {
             // Подписываемся на события смерти врагов
-            EnemyHealth[] enemyHealths = FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
+            SimpleHealthSystem[] enemyHealths = FindObjectsByType<SimpleHealthSystem>(FindObjectsSortMode.None);
             foreach (var enemyHealth in enemyHealths)
             {
                 enemyHealth.OnDeath += OnEnemyDeath;

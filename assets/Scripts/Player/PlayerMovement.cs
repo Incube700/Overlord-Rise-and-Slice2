@@ -222,7 +222,7 @@ namespace OverlordRiseAndSlice
             // Останавливаем игрока
             if (rb2D != null)
             {
-                rb2D.velocity = Vector2.zero;
+                rb2D.linearVelocity = Vector2.zero;
             }
             
             // Убираем неуязвимость
@@ -345,7 +345,7 @@ namespace OverlordRiseAndSlice
         /// <returns>Текущая скорость</returns>
         public float GetCurrentSpeed()
         {
-            return rb2D != null ? rb2D.velocity.magnitude : 0f;
+            return rb2D != null ? rb2D.linearVelocity.magnitude : 0f;
         }
         
         /// <summary>
@@ -371,7 +371,7 @@ namespace OverlordRiseAndSlice
             
             if (rb2D != null)
             {
-                rb2D.velocity = Vector2.zero;
+                rb2D.linearVelocity = Vector2.zero;
             }
             
             // Прерываем dash если он активен

@@ -290,8 +290,8 @@ namespace OverlordRiseAndSlice
             // Останавливаем движение
             if (rb2D != null)
             {
-                rb2D.velocity = Vector2.zero;
-                rb2D.isKinematic = true;
+                rb2D.linearVelocity = Vector2.zero;
+                rb2D.bodyType = RigidbodyType2D.Kinematic;
             }
             
             if (enableDebugLogs)

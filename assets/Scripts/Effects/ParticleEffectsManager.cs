@@ -152,7 +152,7 @@ namespace OverlordRiseAndSlice
             }
             
             // Подписываемся на события врагов
-            EnemyHealth[] enemyHealths = FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
+            SimpleHealthSystem[] enemyHealths = FindObjectsByType<SimpleHealthSystem>(FindObjectsSortMode.None);
             foreach (var enemyHealth in enemyHealths)
             {
                 enemyHealth.OnDeath += OnEnemyDeath;
@@ -320,7 +320,7 @@ namespace OverlordRiseAndSlice
         private void OnEnemyDeath()
         {
             // Находим позицию врага
-            EnemyHealth enemyHealth = FindFirstObjectByType<EnemyHealth>();
+            SimpleHealthSystem enemyHealth = FindFirstObjectByType<SimpleHealthSystem>();
             if (enemyHealth != null)
             {
                 CreateDeathEffect(enemyHealth.transform.position);
@@ -330,7 +330,7 @@ namespace OverlordRiseAndSlice
         private void OnEnemyDamageTaken(int damage)
         {
             // Эффект получения урона
-            EnemyHealth enemyHealth = FindFirstObjectByType<EnemyHealth>();
+            SimpleHealthSystem enemyHealth = FindFirstObjectByType<SimpleHealthSystem>();
             if (enemyHealth != null)
             {
                 CreateEffect("Damage", enemyHealth.transform.position, default, 0.5f);

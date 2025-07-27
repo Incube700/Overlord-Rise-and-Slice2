@@ -363,7 +363,7 @@ namespace OverlordRiseAndSlice
         targetTransform = target;
         if (target != null)
         {
-            enemyHealth = target.GetComponent<EnemyHealth>();
+            enemyHealth = target.GetComponent<SimpleHealthSystem>();
         }
         
         SubscribeToEvents();

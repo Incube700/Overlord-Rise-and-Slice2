@@ -119,80 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &405791855
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 405791858}
-  - component: {fileID: 405791857}
-  - component: {fileID: 405791856}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &405791856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405791855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c9fa13f7c7eb4dc7b825501f1215db9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floorTile_1: {fileID: 11400000, guid: 94397aa07017b433c83b320970700b94, type: 2}
-  floorTile_2: {fileID: 0}
-  floorTile_3: {fileID: 0}
-  wallTile_1: {fileID: 11400000, guid: 54e00a3da10344e95b7975c085561011, type: 2}
-  wallTile_2: {fileID: 11400000, guid: 54e00a3da10344e95b7975c085561011, type: 2}
-  decorTile_1: {fileID: 11400000, guid: b61dab25088cd4d1ea65bc52b16ffccf, type: 2}
-  decorTile_2: {fileID: 11400000, guid: 15a846b93be50405f86ca9e60fb96fa7, type: 2}
-  decorTile_3: {fileID: 11400000, guid: b61dab25088cd4d1ea65bc52b16ffccf, type: 2}
-  enableDebugLogs: 1
---- !u!114 &405791857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405791855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fee8dd9443a024f56a94d8f29f7afeb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomWidth: 15
-  roomHeight: 15
-  generateOnStart: 0
-  floorTilemap: {fileID: 0}
-  wallTilemap: {fileID: 1482288963}
-  floorTile: {fileID: 0}
-  wallTile: {fileID: 11400000, guid: 54e00a3da10344e95b7975c085561011, type: 2}
-  setupCollisions: 1
---- !u!4 &405791858
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405791855}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.56117624, y: -0.6061227, z: -9.888865}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,8 +465,8 @@ Transform:
   m_GameObject: {fileID: 561139390}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3, y: -2.4, z: -9.981399}
-  m_LocalScale: {x: 3.8167086, y: 3.581045, z: 1}
+  m_LocalPosition: {x: -3.5403, y: -2.7675, z: -9.981399}
+  m_LocalScale: {x: 4.6746845, y: 4.2949033, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -26110,4 +26036,3 @@ SceneRoots:
   - {fileID: 910595630}
   - {fileID: 561139397}
   - {fileID: 1246146939}
-  - {fileID: 405791858}
