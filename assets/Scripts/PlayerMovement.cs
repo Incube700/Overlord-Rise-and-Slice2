@@ -112,7 +112,7 @@ public class PlayerMovement : MonoBehaviour
         movement *= moveSpeed;
         
         // Устанавливаем скорость Rigidbody2D
-        rb2D.velocity = movement;
+        rb2D.linearVelocity = movement;
     }
     
     /// <summary>
@@ -195,7 +195,7 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public float GetCurrentSpeed()
     {
-        return rb2D != null ? rb2D.velocity.magnitude : 0f;
+        return rb2D != null ? rb2D.linearVelocity.magnitude : 0f;
     }
     
     /// <summary>
@@ -218,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rb2D != null)
         {
-            rb2D.velocity = Vector2.zero;
+            rb2D.linearVelocity = Vector2.zero;
         }
         
         movementInput = Vector2.zero;
