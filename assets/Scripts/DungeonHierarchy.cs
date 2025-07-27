@@ -54,7 +54,7 @@ namespace OverlordRiseAndSlice
                 CreateDefaultTiers();
             }
             
-            levelGenerator = FindObjectOfType<LevelGenerator>();
+            levelGenerator = FindFirstObjectByType<LevelGenerator>();
             
             if (showDebugInfo)
             {

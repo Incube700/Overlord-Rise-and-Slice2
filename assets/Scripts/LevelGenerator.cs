@@ -182,7 +182,9 @@ public class LevelGenerator : MonoBehaviour
             compositeCollider = tilemapObject.AddComponent<CompositeCollider2D>();
             
             // Настраиваем TilemapCollider2D для работы с CompositeCollider2D
-            tilemapCollider.usedByComposite = true;
+            // В Unity 6.0 usedByComposite устарело, используем новый способ
+            tilemapCollider.includeLayers = new LayerMask();
+            tilemapCollider.excludeLayers = new LayerMask();
             
             // Добавляем Rigidbody2D (требуется для CompositeCollider2D)
             Rigidbody2D rb = tilemapObject.GetComponent<Rigidbody2D>();

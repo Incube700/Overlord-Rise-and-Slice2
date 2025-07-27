@@ -64,7 +64,7 @@ namespace OverlordRiseAndSlice
         /// </summary>
         protected virtual void InitializeComponents()
         {
-            dungeonHierarchy = FindObjectOfType<DungeonHierarchy>();
+            dungeonHierarchy = FindFirstObjectByType<DungeonHierarchy>();
             audioSource = GetComponent<AudioSource>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             
