@@ -6,12 +6,17 @@ namespace OverlordRiseAndSlice
 {
     /// <summary>
     /// Система боя игрока с современной архитектурой
-    /// Использует PlayerAttackSystem для атак
+    /// Использует SimpleAttackSystem для атак
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
         [Header("Настройки отладки")]
         [SerializeField] private bool enableDebugLogs = true;
+        
+        [Header("Визуальные эффекты")]
+        [SerializeField] private AttackVisualEffects visualEffects;
+        [SerializeField] private GameObject attackIndicator;
+        [SerializeField] private LineRenderer attackLine;
         
         // Компоненты
         private PlayerMovement playerMovement;
@@ -36,9 +41,56 @@ namespace OverlordRiseAndSlice
             animator = GetComponent<Animator>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             
+            if (visualEffects == null)
+                visualEffects = GetComponent<AttackVisualEffects>();
+                
+            if (attackLine == null)
+                attackLine = GetComponent<LineRenderer>();
+                
             if (enableDebugLogs)
             {
                 Debug.Log("PlayerCombat: Компоненты инициализированы");
+            }
+        }
+        
+        private void Start()
+        {
+            // Подписываемся на события атаки
+            if (attackSystem != null)
+            {
+                attackSystem.OnAttackStarted += OnAttackStarted;
+                attackSystem.OnAttackEnded += OnAttackEnded;
+                attackSystem.OnEnemyHit += OnEnemyHit;
+            }
+            
+            // Настраиваем индикатор атаки
+            SetupAttackIndicator();
+        }
+        
+        private void OnDestroy()
+        {
+            // Отписываемся от событий
+            if (attackSystem != null)
+            {
+                attackSystem.OnAttackStarted -= OnAttackStarted;
+                attackSystem.OnAttackEnded -= OnAttackEnded;
+                attackSystem.OnEnemyHit -= OnEnemyHit;
+            }
+        }
+        
+        /// <summary>
+        /// Настраивает индикатор атаки
+        /// </summary>
+        private void SetupAttackIndicator()
+        {
+            if (attackLine != null)
+            {
+                attackLine.enabled = false;
+                attackLine.startWidth = 0.1f;
+                attackLine.endWidth = 0.05f;
+                attackLine.material = new Material(Shader.Find("Sprites/Default"));
+                attackLine.startColor = Color.red;
+                attackLine.endColor = Color.yellow;
             }
         }
         
@@ -72,6 +124,35 @@ namespace OverlordRiseAndSlice
         public bool CanAttack()
         {
             return attackSystem != null && attackSystem.CanAttack();
+        }
+        
+        /// <summary>
+        /// Показывает индикатор атаки
+        /// </summary>
+        /// <param name="direction">Направление атаки</param>
+        private void ShowAttackIndicator(Vector2 direction)
+        {
+            if (attackLine != null && direction.magnitude > 0.1f)
+            {
+                attackLine.enabled = true;
+                attackLine.SetPosition(0, transform.position);
+                attackLine.SetPosition(1, transform.position + (Vector3)(direction * attackSystem.GetAttackRange()));
+                
+                StartCoroutine(HideAttackIndicator());
+            }
+        }
+        
+        /// <summary>
+        /// Скрывает индикатор атаки
+        /// </summary>
+        private IEnumerator HideAttackIndicator()
+        {
+            yield return new WaitForSeconds(0.2f);
+            
+            if (attackLine != null)
+            {
+                attackLine.enabled = false;
+            }
         }
         
         #region Публичные методы для других систем

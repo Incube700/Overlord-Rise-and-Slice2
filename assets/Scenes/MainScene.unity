@@ -855,6 +855,7 @@ GameObject:
   - component: {fileID: 1246146941}
   - component: {fileID: 1246146940}
   - component: {fileID: 1246146942}
+  - component: {fileID: 1246146944}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -1073,6 +1074,29 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3.3, y: 3.3}
   m_EdgeRadius: 0
+--- !u!114 &1246146944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246146932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089b15e662cc74c7884e429f98e1efcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  invulnerabilityDuration: 0.5
+  isInvulnerable: 0
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  damageFlashDuration: 0.1
+  damageFlashCount: 3
+  deathDelay: 0.5
+  disableColliderOnDeath: 1
+  destroyOnDeath: 1
+  enableDebugLogs: 1
 --- !u!1 &1482288962
 GameObject:
   m_ObjectHideFlags: 0
