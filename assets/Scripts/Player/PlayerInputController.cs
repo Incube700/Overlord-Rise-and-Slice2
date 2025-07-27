@@ -54,12 +54,28 @@ namespace OverlordRiseAndSlice
         
         private void SetupInputActions()
         {
-            if (playerInput == null) return;
+            if (playerInput == null || playerInput.actions == null) 
+            {
+                if (enableDebugLogs)
+                {
+                    Debug.LogError("PlayerInputController: PlayerInput или actions не найдены!");
+                }
+                return;
+            }
             
             // Получаем действия из Input Actions
             moveAction = playerInput.actions["Move"];
             attackAction = playerInput.actions["Attack"];
             dashAction = playerInput.actions["Dash"];
+            
+            if (moveAction == null || attackAction == null || dashAction == null)
+            {
+                if (enableDebugLogs)
+                {
+                    Debug.LogError("PlayerInputController: Не удалось найти действия в InputActions!");
+                }
+                return;
+            }
             
             // Подписываемся на события
             attackAction.performed += OnAttackPerformed;
@@ -110,6 +126,10 @@ namespace OverlordRiseAndSlice
             {
                 playerCombat.PerformAttack();
             }
+            else if (enableDebugLogs)
+            {
+                Debug.LogWarning("PlayerInputController: PlayerCombat не найден!");
+            }
             
             // Уведомляем другие системы
             OnAttackInput?.Invoke();
@@ -126,6 +146,10 @@ namespace OverlordRiseAndSlice
             if (playerMovement != null)
             {
                 playerMovement.PerformDash();
+            }
+            else if (enableDebugLogs)
+            {
+                Debug.LogWarning("PlayerInputController: PlayerMovement не найден!");
             }
             
             // Уведомляем другие системы
