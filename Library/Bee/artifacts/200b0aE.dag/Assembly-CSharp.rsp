@@ -385,7 +385,7 @@
 "Assets/Scripts/InteractiveObjects/BaseInteractiveObject.cs"
 "Assets/Scripts/LevelGenerator.cs"
 "Assets/Scripts/LevelTier.cs"
-"Assets/Scripts/PlayerMovementSimple.cs"
+"Assets/Scripts/PlayerMovement.cs"
 "Assets/Scripts/TileDatabase.cs"
 "Assets/Scripts/UI/EnemyHealthBar.cs"
 -langversion:9.0
