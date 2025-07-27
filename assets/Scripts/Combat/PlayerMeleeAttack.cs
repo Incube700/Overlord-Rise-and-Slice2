@@ -31,7 +31,7 @@ public class PlayerMeleeAttack : MonoBehaviour
     private Transform playerTransform;
     private SpriteRenderer playerSprite;
     private Animator animator;
-    private PlayerMovementSimple playerMovement;
+    private PlayerMovement playerMovement;
 
     // Визуальные эффекты
     private Color originalColor;
@@ -64,7 +64,7 @@ public class PlayerMeleeAttack : MonoBehaviour
         playerTransform = transform;
         playerSprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        playerMovement = GetComponent<PlayerMovementSimple>();
+        playerMovement = GetComponent<PlayerMovement>();
 
         if (playerSprite != null)
         {
