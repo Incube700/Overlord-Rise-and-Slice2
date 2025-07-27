@@ -292,6 +292,15 @@ namespace OverlordRiseAndSlice
         }
         
         /// <summary>
+        /// Получает текущую дальность атаки
+        /// </summary>
+        /// <returns>Дальность атаки</returns>
+        public float GetAttackRange()
+        {
+            return attackRange;
+        }
+        
+        /// <summary>
         /// Устанавливает новую перезарядку атаки
         /// </summary>
         /// <param name="newCooldown">Новая перезарядка</param>
